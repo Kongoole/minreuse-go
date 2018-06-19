@@ -2,7 +2,7 @@ package route
 
 import (
 	"net/http"
-	"github.com/Kongoole/minreuse/controller"
+	"github.com/Kongoole/minreuse-go/controller"
 )
 
 func Register() {
