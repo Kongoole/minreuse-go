@@ -7,7 +7,7 @@ import (
 
 func Register() {
 	http.HandleFunc("/", controller.Home{}.Index)
-	http.HandleFunc("/blog", controller.Blog{}.Blog)
+	http.HandleFunc("/blog", controller.Blog{}.Index)
 	http.HandleFunc("/article", controller.Blog{}.Article)
 	http.HandleFunc("/public", serveResource)
 }

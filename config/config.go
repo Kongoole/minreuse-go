@@ -10,7 +10,7 @@ var configuration map[string]string = map[string]string{
 	"controller_folder":"controller",
 }
 
-func Config() {
+func init() {
 	// set app config
 	for key, val := range configuration {
 		os.Setenv(key, string(val))
