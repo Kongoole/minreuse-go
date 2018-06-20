@@ -11,12 +11,14 @@ type Render struct {
 	wr        http.ResponseWriter
 	hasHeader bool
 	hasFooter bool
+	hasSlogan bool
 }
 
 func New() *Render {
 	return &Render{
 		hasHeader: true,
 		hasFooter: true,
+		hasSlogan: true,
 	}
 }
 
@@ -27,6 +29,11 @@ func (r *Render) SetHasHeader(status bool) *Render {
 
 func (r *Render) SetHasFooter(status bool) *Render {
 	r.hasFooter = status
+	return r
+}
+
+func (r *Render) SetHasSlogan(status bool) *Render {
+	r.hasSlogan = status
 	return r
 }
 
@@ -49,6 +56,9 @@ func (r *Render) View(data interface{}) {
 	}
 	if r.hasFooter {
 		r.templates = append(r.templates, os.Getenv("view_folder")+"common/footer.html")
+	}
+	if r.hasSlogan {
+		r.templates = append(r.templates, os.Getenv("view_folder")+"common/slogan.html")
 	}
 	t, _ := template.ParseFiles(r.templates...)
 	t.Execute(r.wr, data)
