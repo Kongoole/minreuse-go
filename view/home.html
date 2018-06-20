@@ -1,61 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>@yield('title', 'MINREUSE')</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <link rel="stylesheet" href="../public/css/materialize.css">
-</head>
-<body>
-
-<div class="container">
-    <div class="row">
-        <div class="col l12">
-            <nav>
-                <div class="nav-wrapper z-depth-3">
-                    <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-                    <ul id="nav-mobile" class="left hide-on-med-and-down">
-                        <li><a class="nav-link" href="#">博客</a></li>
-                        <li><a class="nav-link" href="#">项目</a></li>
-                        <li>
-                            <a class="dropdown-trigger" data-target="projects-cate" href="#">
-                                关于<i class="material-icons right">arrow_drop_down</i>
-                            </a>
-                        </li>
-                    </ul>
-                    <div style="height: 100%" class="right">
-                        <div class="input-field">
-                            <input id="search" type="search" required>
-                            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                            <i class="material-icons">close</i>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <ul class="sidenav" id="mobile-demo">
-                <li><a class="nav-link" href="#">主页</a></li>
-                <li><a class="nav-link" href="#">博客</a></li>
-                <li><a class="nav-link" href="#">项目</a></li>
-                <li><a class="nav-link" href="#">关于</a></li>
-            </ul>
-            <ul id="projects-cate" class="dropdown-content">
-                <li><a href="#">Kun</a></li>
-                <li><a href="#">Yang</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col l12">
-            ddddd
-        </div>
-    </div>
-    <div class="row">
-        <div class="col l6">
-            Made by Qiankun :)
-        </div>
+{{template "header"}}
+<div class="row">
+    <div class="col l12">
+        adfasfasfasf
     </div>
 </div>
-<script type="text/javascript" src="../public/js/materialize.js"></script>
-</body>
-</html>
+{{template "footer"}}

@@ -6,8 +6,8 @@ import (
 )
 
 var configuration map[string]string = map[string]string{
-	"view_folder": "view",
-	"controller_folder":"controller",
+	"view_folder": "view/",
+	"controller_folder":"controller/",
 }
 
 func init() {
