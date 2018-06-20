@@ -43,7 +43,7 @@ func (r *Render) SetDestination(wr http.ResponseWriter) *Render {
 	return r
 }
 
-func (r *Render) View() {
+func (r *Render) View(data interface{}) {
 	if r.hasHeader {
 		r.templates = append(r.templates, os.Getenv("view_folder")+"common/header.html")
 	}
@@ -51,5 +51,5 @@ func (r *Render) View() {
 		r.templates = append(r.templates, os.Getenv("view_folder")+"common/footer.html")
 	}
 	t, _ := template.ParseFiles(r.templates...)
-	t.Execute(r.wr, nil)
+	t.Execute(r.wr, data)
 }

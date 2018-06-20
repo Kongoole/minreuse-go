@@ -7,7 +7,7 @@ import (
 
 type Home struct {}
 
-// home shows home page
+// Index shows home page
 func (h Home) Index(w http.ResponseWriter, r *http.Request) {
-	render.New().SetDestination(w).SetTemplates("home.html").View()
+	render.New().SetDestination(w).SetTemplates("home.html").View(nil)
 }
