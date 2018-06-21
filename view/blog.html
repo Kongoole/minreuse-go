@@ -2,34 +2,15 @@
 <div class="row">
 
     <div class="col l8 articles">
-        <div class="card darken-1">
-            <div class="card-content black-text">
+        {{range .}}
+            <div class="card darken-1">
+                <div class="card-content black-text">
                 <span class="card-title">
-                    <a class="red-text text-lighten-2" href="#">AAAAAAAA</a>
+                    <a class="red-text text-lighten-2" href="/article?article_id={{.ArticleId}}">{{.Title}}</a>
                 </span>
+                </div>
             </div>
-        </div>
-        <div class="card darken-1">
-            <div class="card-content black-text">
-                <span class="card-title">
-                    <a class="red-text text-lighten-2" href="#">AAAAAAAA</a>
-                </span>
-            </div>
-        </div>
-        <div class="card darken-1">
-            <div class="card-content black-text">
-                <span class="card-title">
-                    <a class="red-text text-lighten-2" href="#">AAAAAAAA</a>
-                </span>
-            </div>
-        </div>
-        <div class="card darken-1">
-            <div class="card-content black-text">
-                <span class="card-title">
-                    <a class="red-text text-lighten-2" href="#">AAAAAAAA</a>
-                </span>
-            </div>
-        </div>
+        {{end}}
     </div>
     <div class="col l4">
     {{template "slogan"}}

@@ -16,7 +16,7 @@ var conn *sql.DB
 
 func init() {
 	// connect to database
-	dsn := os.Getenv("DB_USERNAME")+":"+"@tcp("+os.Getenv("DB_HOST")+")/"+os.Getenv("DB_DATABASE")
+	dsn := os.Getenv("DB_USERNAME")+":" + os.Getenv("DB_PASSWORD") + "@tcp("+os.Getenv("DB_HOST")+")/"+os.Getenv("DB_DATABASE")
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal("fail to connect to mysql")
@@ -35,5 +35,6 @@ func (m *Model) InitMaster() {
 }
 
 func (m *Model) InitSlave() {
+	// TODO: build slave connection
 	m.Slave = conn
 }

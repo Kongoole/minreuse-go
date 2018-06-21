@@ -1,6 +1,6 @@
 package model
 
-import "fmt"
+import "log"
 
 type ArticleModel struct {
 	Model
@@ -9,13 +9,14 @@ type ArticleModel struct {
 type Article struct {
 	ArticleId int
 	Title     string
+	Content string
 }
 
-func (a ArticleModel) FetchAll() {
-	a.InitMaster()
-	stmt, err := a.Master.Prepare("SELECT article_id, title FROM article")
+func (a ArticleModel) FetchAll() []Article {
+	a.InitSlave()
+	stmt, err := a.Slave.Prepare("SELECT article_id, title FROM article ORDER BY update_at DESC")
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 	defer stmt.Close()
 
@@ -27,5 +28,9 @@ func (a ArticleModel) FetchAll() {
 		articles = append(articles, article)
 	}
 
-	fmt.Println(articles)
+	return articles
+}
+
+func (a ArticleModel) FetchOneByArticleId() Article {
+	return Article{}
 }
