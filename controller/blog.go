@@ -23,5 +23,10 @@ func (b Blog) Article(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	article := model.ArticleModel{}.FetchOneByArticleId(articleId)
-	render.New().SetDestination(w).SetTemplates("article.html").SetHasSlogan(false).View(article)
+	tags := model.TagModel{}.FetchTagsByArticleId(articleId)
+	data := struct {
+		Article model.Article
+		Tags []model.Tag
+	}{article, tags}
+	render.New().SetDestination(w).SetTemplates("article.html").SetHasSlogan(false).View(data)
 }
