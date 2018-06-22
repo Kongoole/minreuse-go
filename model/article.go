@@ -1,6 +1,8 @@
 package model
 
-import "log"
+import (
+	"log"
+)
 
 type ArticleModel struct {
 	Model
@@ -9,7 +11,7 @@ type ArticleModel struct {
 type Article struct {
 	ArticleId int
 	Title     string
-	Content string
+	Content   string
 }
 
 func (a ArticleModel) FetchAll() []Article {
@@ -20,7 +22,11 @@ func (a ArticleModel) FetchAll() []Article {
 	}
 	defer stmt.Close()
 
-	rows, _ := stmt.Query()
+	rows, err := stmt.Query()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	var articles []Article
 	for rows.Next() {
 		article := Article{}
@@ -31,6 +37,25 @@ func (a ArticleModel) FetchAll() []Article {
 	return articles
 }
 
-func (a ArticleModel) FetchOneByArticleId() Article {
-	return Article{}
+func (a ArticleModel) FetchOneByArticleId(articleId int) Article {
+	a.InitSlave()
+
+	stmt, err := a.Slave.Prepare("SELECT article_id, title, content FROM article WHERE article_id=?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query(articleId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var article Article
+	for rows.Next() {
+		rows.Scan(&article.ArticleId, &article.Title, &article.Content)
+		break
+	}
+
+	return article
 }

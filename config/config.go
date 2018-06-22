@@ -5,7 +5,7 @@ import (
 	"github.com/Kongoole/minreuse-go/env"
 )
 
-var configuration map[string]string = map[string]string{
+var configuration = map[string]string{
 	"view_folder": "view/",
 	"controller_folder":"controller/",
 }

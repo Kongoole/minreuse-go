@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"github.com/Kongoole/minreuse-go/model"
 	"github.com/Kongoole/minreuse-go/render"
+	"strconv"
+	"log"
 )
 
 type Blog struct{}
@@ -16,6 +18,10 @@ func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 
 // Article shows an article
 func (b Blog) Article(w http.ResponseWriter, r *http.Request) {
-
-	render.New().SetDestination(w).SetTemplates("article.html").SetHasSlogan(false).View(nil)
+	articleId, err := strconv.Atoi(r.URL.Query().Get("article_id"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	article := model.ArticleModel{}.FetchOneByArticleId(articleId)
+	render.New().SetDestination(w).SetTemplates("article.html").SetHasSlogan(false).View(article)
 }
