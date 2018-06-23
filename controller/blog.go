@@ -13,7 +13,12 @@ type Blog struct{}
 // Blog shows blog list
 func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 	articles := model.ArticleModel{}.FetchAll()
-	render.New().SetDestination(w).SetTemplates("blog.html").View(articles)
+	tags := model.TagModel{}.FetchTagsWithArticlesNum()
+	data:= struct {
+		Articles []model.Article
+		Tags []model.Tag
+	}{articles, tags}
+	render.New().SetDestination(w).SetTemplates("blog.html").View(data)
 }
 
 // Article shows an article
@@ -29,4 +34,18 @@ func (b Blog) Article(w http.ResponseWriter, r *http.Request) {
 		Tags []model.Tag
 	}{article, tags}
 	render.New().SetDestination(w).SetTemplates("article.html").SetHasSlogan(false).View(data)
+}
+
+func (b Blog) TagArticles(w http.ResponseWriter, r *http.Request) {
+	tagId, err := strconv.Atoi(r.URL.Query().Get("tag_id"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	articles := model.ArticleModel{}.FetchTagArticlesByTagId(tagId)
+	tags := model.TagModel{}.FetchTagsWithArticlesNum()
+	data := struct {
+		Articles []model.Article
+		Tags []model.Tag
+	}{articles, tags}
+	render.New().SetDestination(w).SetTemplates("tag_articles.html").View(data)
 }

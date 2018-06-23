@@ -12,6 +12,7 @@ type Render struct {
 	hasHeader bool
 	hasFooter bool
 	hasSlogan bool
+	hasTags   bool
 }
 
 func New() *Render {
@@ -19,6 +20,7 @@ func New() *Render {
 		hasHeader: true,
 		hasFooter: true,
 		hasSlogan: true,
+		hasTags:   true,
 	}
 }
 
@@ -34,6 +36,11 @@ func (r *Render) SetHasFooter(status bool) *Render {
 
 func (r *Render) SetHasSlogan(status bool) *Render {
 	r.hasSlogan = status
+	return r
+}
+
+func (r *Render) SetHasTags(status bool) *Render {
+	r.hasTags = status
 	return r
 }
 
@@ -59,6 +66,9 @@ func (r *Render) View(data interface{}) {
 	}
 	if r.hasSlogan {
 		r.templates = append(r.templates, os.Getenv("view_folder")+"common/slogan.html")
+	}
+	if r.hasTags {
+		r.templates = append(r.templates, os.Getenv("view_folder")+"common/tag.html")
 	}
 	t, _ := template.ParseFiles(r.templates...)
 	t.Execute(r.wr, data)

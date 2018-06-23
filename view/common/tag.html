@@ -1,0 +1,14 @@
+{{define "tag"}}
+<ul class="collection">
+{{range .}}
+    <li class="collection-item">
+        <a class="red-text text-lighten-2" href="/tag?tag_id={{.Id}}&tag_name={{.Name}}">
+        {{.Name}}
+        </a>
+        <a href="#" class="secondary-content">
+            <span class="badge new materialize-red lighten-2" data-badge-caption="">{{.Articles}}</span>
+        </a>
+    </li>
+{{end}}
+</ul>
+{{end}}

@@ -59,3 +59,23 @@ func (a ArticleModel) FetchOneByArticleId(articleId int) Article {
 
 	return article
 }
+
+func (a ArticleModel) FetchTagArticlesByTagId(tagId int) []Article {
+	a.InitSlave()
+	stmt, err := a.Slave.Prepare("SELECT a.article_id, a.title FROM article AS a INNER JOIN article_tag AS at" +
+		" ON a.article_id=at.article_id WHERE at.tag_id=?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query(tagId)
+	var articles []Article
+	for rows.Next() {
+		article := Article{}
+		rows.Scan(&article.ArticleId, &article.Title)
+		articles = append(articles, article)
+	}
+
+	return articles
+}

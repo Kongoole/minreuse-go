@@ -9,6 +9,7 @@ func Register() {
 	http.HandleFunc("/", controller.Home{}.Index)
 	http.HandleFunc("/blog", controller.Blog{}.Index)
 	http.HandleFunc("/article", controller.Blog{}.Article)
+	http.HandleFunc("/tag", controller.Blog{}.TagArticles)
 	http.HandleFunc("/public/", serveResource)
 }
 
