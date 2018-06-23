@@ -2,8 +2,11 @@ package render
 
 import (
 	"os"
-	"text/template"
+	"html/template"
 	"net/http"
+	"fmt"
+	"gopkg.in/russross/blackfriday.v2"
+	"strings"
 )
 
 type Render struct {
@@ -57,6 +60,11 @@ func (r *Render) SetDestination(wr http.ResponseWriter) *Render {
 	return r
 }
 
+func markDowner(args ...interface{}) template.HTML {
+	s := blackfriday.Run([]byte(fmt.Sprintf("%s", args...)), blackfriday.WithNoExtensions())
+	return template.HTML(s)
+}
+
 func (r *Render) View(data interface{}) {
 	if r.hasHeader {
 		r.templates = append(r.templates, os.Getenv("view_folder")+"common/header.html")
@@ -70,6 +78,7 @@ func (r *Render) View(data interface{}) {
 	if r.hasTags {
 		r.templates = append(r.templates, os.Getenv("view_folder")+"common/tag.html")
 	}
-	t, _ := template.ParseFiles(r.templates...)
+	// New() must has a parameter, here use the first file name
+	t, _ := template.New(strings.Split(r.templates[0], "/")[1]).Funcs(template.FuncMap{"markDown": markDowner}).ParseFiles(r.templates...)
 	t.Execute(r.wr, data)
 }
