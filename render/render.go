@@ -61,7 +61,7 @@ func (r *Render) SetDestination(wr http.ResponseWriter) *Render {
 }
 
 func markDowner(args ...interface{}) template.HTML {
-	s := blackfriday.Run([]byte(fmt.Sprintf("%s", args...)), blackfriday.WithNoExtensions())
+	s := blackfriday.Run([]byte(fmt.Sprintf("%s", args...)))
 	return template.HTML(s)
 }
 
