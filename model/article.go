@@ -26,6 +26,7 @@ func (a ArticleModel) FetchAll() []Article {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer rows.Close()
 
 	var articles []Article
 	for rows.Next() {
@@ -50,6 +51,7 @@ func (a ArticleModel) FetchOneByArticleId(articleId int) Article {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer rows.Close()
 
 	var article Article
 	for rows.Next() {
@@ -70,6 +72,7 @@ func (a ArticleModel) FetchTagArticlesByTagId(tagId int) []Article {
 	defer stmt.Close()
 
 	rows, err := stmt.Query(tagId)
+	defer rows.Close()
 	var articles []Article
 	for rows.Next() {
 		article := Article{}
@@ -78,4 +81,8 @@ func (a ArticleModel) FetchTagArticlesByTagId(tagId int) []Article {
 	}
 
 	return articles
+}
+
+func (a ArticleModel) FetchArticlesByKeyWords(keywords[] string) {
+
 }

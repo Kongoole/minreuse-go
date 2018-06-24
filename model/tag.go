@@ -26,6 +26,7 @@ func (t TagModel) FetchTagsByArticleId(articleId int) []Tag {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer rows.Close()
 
 	var tags []Tag
 	for rows.Next() {
@@ -50,6 +51,8 @@ func (t TagModel) FetchTagsWithArticlesNum() []Tag {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer rows.Close()
+
 	var tags []Tag
 	for rows.Next() {
 		tag := Tag{}
