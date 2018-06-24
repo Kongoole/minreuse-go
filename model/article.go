@@ -15,7 +15,7 @@ type Article struct {
 }
 
 func (a ArticleModel) FetchAll() []Article {
-	a.InitSlave()
+	(&a).InitSlave()
 	stmt, err := a.Slave.Prepare("SELECT article_id, title FROM article ORDER BY update_at DESC")
 	if err != nil {
 		log.Fatal(err)
@@ -38,7 +38,7 @@ func (a ArticleModel) FetchAll() []Article {
 }
 
 func (a ArticleModel) FetchOneByArticleId(articleId int) Article {
-	a.InitSlave()
+	(&a).InitSlave()
 
 	stmt, err := a.Slave.Prepare("SELECT article_id, title, content FROM article WHERE article_id=?")
 	if err != nil {
@@ -61,7 +61,7 @@ func (a ArticleModel) FetchOneByArticleId(articleId int) Article {
 }
 
 func (a ArticleModel) FetchTagArticlesByTagId(tagId int) []Article {
-	a.InitSlave()
+	(&a).InitSlave()
 	stmt, err := a.Slave.Prepare("SELECT a.article_id, a.title FROM article AS a INNER JOIN article_tag AS at" +
 		" ON a.article_id=at.article_id WHERE at.tag_id=?")
 	if err != nil {
