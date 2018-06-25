@@ -5,6 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"os"
+	"time"
 )
 
 type Model struct {
@@ -27,6 +28,7 @@ func init() {
 	}
 
 	conn = db
+	conn.SetConnMaxLifetime(time.Duration(1) * time.Minute)
 }
 
 // with a Model pointer
