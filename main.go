@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "github.com/Kongoole/minreuse-go/bootstrap"
+	_ "github.com/kongoole/minreuse-go/bootstrap"
 	"log"
 	"net/http"
 )

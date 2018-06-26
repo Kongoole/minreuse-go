@@ -2,7 +2,7 @@ package controller
 
 import (
 	"net/http"
-	"github.com/Kongoole/minreuse-go/render"
+	"github.com/kongoole/minreuse-go/render"
 )
 
 type Home struct {}

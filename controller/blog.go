@@ -1,11 +1,13 @@
 package controller
 
 import (
-	"net/http"
-	"github.com/Kongoole/minreuse-go/model"
-	"github.com/Kongoole/minreuse-go/render"
-	"strconv"
 	"log"
+	"net/http"
+	"strconv"
+
+	"github.com/kongoole/minreuse-go/model"
+	"github.com/kongoole/minreuse-go/render"
+	"github.com/kongoole/minreuse-go/service"
 )
 
 type Blog struct{}
@@ -14,9 +16,9 @@ type Blog struct{}
 func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 	articles := model.ArticleModel{}.FetchAll()
 	tags := model.TagModel{}.FetchTagsWithArticlesNum()
-	data:= struct {
+	data := struct {
 		Articles []model.Article
-		Tags []model.Tag
+		Tags     []model.Tag
 	}{articles, tags}
 	render.New().SetDestination(w).SetTemplates("blog.html").View(data)
 }
@@ -31,7 +33,7 @@ func (b Blog) Article(w http.ResponseWriter, r *http.Request) {
 	tags := model.TagModel{}.FetchTagsByArticleId(articleId)
 	data := struct {
 		Article model.Article
-		Tags []model.Tag
+		Tags    []model.Tag
 	}{article, tags}
 	render.New().SetDestination(w).SetTemplates("article.html").SetHasSlogan(false).View(data)
 }
@@ -45,7 +47,18 @@ func (b Blog) TagArticles(w http.ResponseWriter, r *http.Request) {
 	tags := model.TagModel{}.FetchTagsWithArticlesNum()
 	data := struct {
 		Articles []model.Article
-		Tags []model.Tag
+		Tags     []model.Tag
 	}{articles, tags}
 	render.New().SetDestination(w).SetTemplates("tag_articles.html").View(data)
+}
+
+func (b Blog) Search(w http.ResponseWriter, r *http.Request) {
+	searcher := service.NewArticleSearcher()
+	articles := service.DoSearch(searcher, r.URL.Query().Get("keywords")).([]model.Article)
+	tags := model.TagModel{}.FetchTagsWithArticlesNum()
+	data := struct {
+		Articles []model.Article
+		Tags     []model.Tag
+	}{articles, tags}
+	render.New().SetDestination(w).SetTemplates("blog.html").View(data)
 }

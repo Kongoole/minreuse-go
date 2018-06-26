@@ -2,7 +2,7 @@ package config
 
 import (
 	"os"
-	"github.com/Kongoole/minreuse-go/env"
+	"github.com/kongoole/minreuse-go/env"
 )
 
 var configuration = map[string]string{

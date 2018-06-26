@@ -34,13 +34,13 @@
                             </a>
                         </li>
                     </ul>
-                    <div style="height: 100%" class="right">
+                    <form style="height: 100%" class="right" action="/blog/search" method="get">
                         <div class="input-field">
-                            <input id="search" type="search" required>
+                            <input name="keywords" id="search" type="search" required {{if keywords}}{{keywords}}{{end}}>
                             <label class="label-icon" for="search"><i class="material-icons">search</i></label>
                             <i class="material-icons">close</i>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </nav>
             <ul class="sidenav" id="mobile-demo">

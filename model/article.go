@@ -83,6 +83,24 @@ func (a ArticleModel) FetchTagArticlesByTagId(tagId int) []Article {
 	return articles
 }
 
-func (a ArticleModel) FetchArticlesByKeyWords(keywords[] string) {
+func (a ArticleModel) FetchArticlesByKeyWords(keywords string) []Article {
+	(&a).InitSlave()
+	stmt, err := a.Slave.Prepare("SELECT article_id, title, content FROM article WHERE title LIKE concat('%', ?, '%') OR content LIKE concat('%', ?, '%')")
+	if err != nil {
+		log.Fatal("failed to search article, err: " + err.Error())
+	}
+	defer stmt.Close()
 
+	rows, err := stmt.Query(keywords, keywords)
+	if err != nil {
+		log.Fatal("failed to search article, err:" + err.Error())
+	}
+	defer rows.Close()
+	var articles []Article
+	for rows.Next() {
+		article := Article{}
+		rows.Scan(&article.ArticleId, &article.Title, &article.Content)
+		articles = append(articles, article)
+	}
+	return articles
 }

@@ -1,8 +1,8 @@
 package bootstrap
 
 import (
-	_ "github.com/Kongoole/minreuse-go/config"
-	"github.com/Kongoole/minreuse-go/route"
+	_ "github.com/kongoole/minreuse-go/config"
+	"github.com/kongoole/minreuse-go/route"
 )
 
 func init() {
