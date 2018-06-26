@@ -14,6 +14,10 @@ type Article struct {
 	Content   string
 }
 
+func NewArticleModel() ArticleModel {
+	return ArticleModel{}
+}
+
 func (a ArticleModel) FetchAll() []Article {
 	(&a).InitSlave()
 	stmt, err := a.Slave.Prepare("SELECT article_id, title FROM article ORDER BY update_at DESC")

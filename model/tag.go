@@ -12,6 +12,10 @@ type Tag struct {
 	Articles int // how many articles belong to this tag
 }
 
+func NewTagModel() TagModel {
+	return TagModel{}
+}
+
 // fetch article tags
 func (t TagModel) FetchTagsByArticleId(articleId int) []Tag {
 	t.InitSlave()
