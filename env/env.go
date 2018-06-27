@@ -1,9 +1,9 @@
 package env
 
 import (
-	"os"
-	"log"
 	"bufio"
+	"log"
+	"os"
 	"strings"
 )
 

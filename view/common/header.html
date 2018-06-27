@@ -1,58 +1,83 @@
 {{define "header"}}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>MINREUSE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" href="/public/css/icons.css">
     <link rel="stylesheet" href="/public/css/materialize.css">
     <!--mobile nav-->
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('.sidenav');
             M.Sidenav.init(elems, {});
         });
     </script>
 </head>
+
 <body>
 
-<div class="container">
-    <div class="row">
-        <div class="col l12 s12">
-            <nav>
-                <div class="nav-wrapper z-depth-3">
-                    <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-                    <ul id="nav-mobile" class="left hide-on-med-and-down">
-                        <li><a class="nav-link" href="/">首页</a></li>
-                        <li><a class="nav-link" href="/blog">博客</a></li>
-                        <li><a class="nav-link" href="#">项目</a></li>
-                        <li>
-                            <a class="dropdown-trigger" data-target="projects-cate" href="#">
-                                关于<i class="material-icons right">arrow_drop_down</i>
-                            </a>
-                        </li>
-                    </ul>
-                    <form style="height: 100%" class="right" action="/blog/search" method="get">
-                        <div class="input-field">
-                            <input name="keywords" id="search" type="search" required>
-                            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                            <i class="material-icons">close</i>
-                        </div>
-                    </form>
-                </div>
-            </nav>
-            <ul class="sidenav" id="mobile-demo">
-                <li><a class="nav-link" href="/">主页</a></li>
-                <li><a class="nav-link" href="/blog">博客</a></li>
-                <li><a class="nav-link" href="#">项目</a></li>
-                <li><a class="nav-link" href="#">关于</a></li>
-            </ul>
-            <ul id="projects-cate" class="dropdown-content">
-                <li><a href="#">Kun</a></li>
-                <li><a href="#">Yang</a></li>
-            </ul>
+    <div class="container">
+        <div class="row">
+            <div class="col l12 s12">
+                <nav>
+                    <div class="nav-wrapper z-depth-3">
+                        <a href="#" data-target="mobile-demo" class="sidenav-trigger">
+                            <i class="material-icons">menu</i>
+                        </a>
+                        <ul id="nav-mobile" class="left hide-on-med-and-down">
+                            <li>
+                                <a class="nav-link" href="/">首页</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="/blog">博客</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="#">项目</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-trigger" data-target="projects-cate" href="#">
+                                    关于
+                                    <i class="material-icons right">arrow_drop_down</i>
+                                </a>
+                            </li>
+                        </ul>
+                        <form style="height: 100%" class="right" action="/blog/search" method="get">
+                            <div class="input-field">
+                                <input name="keywords" id="search" type="search" required value={{.Keywords}}>
+                                <label class="label-icon" for="search">
+                                    <i class="material-icons">search</i>
+                                </label>
+                                <i class="material-icons">close</i>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
+                <ul class="sidenav" id="mobile-demo">
+                    <li>
+                        <a class="nav-link" href="/">主页</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="/blog">博客</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="#">项目</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="#">关于</a>
+                    </li>
+                </ul>
+                <ul id="projects-cate" class="dropdown-content">
+                    <li>
+                        <a href="#">Kun</a>
+                    </li>
+                    <li>
+                        <a href="#">Yang</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-{{end}}
+        {{end}}

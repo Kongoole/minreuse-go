@@ -1,11 +1,11 @@
 package render
 
 import (
-	"os"
-	"html/template"
-	"net/http"
 	"fmt"
 	"gopkg.in/russross/blackfriday.v2"
+	"html/template"
+	"net/http"
+	"os"
 	"strings"
 )
 

@@ -12,14 +12,18 @@ import (
 
 type Blog struct{}
 
+// BlogData is used to render blog page
+type BlogData struct {
+	Articles []model.Article
+	Tags     []model.Tag
+	Keywords string
+}
+
 // Blog shows blog list
 func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 	articles := model.NewArticleModel().FetchAll()
 	tags := model.NewTagModel().FetchTagsWithArticlesNum()
-	data := struct {
-		Articles []model.Article
-		Tags     []model.Tag
-	}{articles, tags}
+	data := BlogData{Articles: articles, Tags: tags}
 	render.New().SetDestination(w).SetTemplates("blog.html").View(data)
 }
 
@@ -45,20 +49,15 @@ func (b Blog) TagArticles(w http.ResponseWriter, r *http.Request) {
 	}
 	articles := model.NewArticleModel().FetchTagArticlesByTagId(tagId)
 	tags := model.NewTagModel().FetchTagsWithArticlesNum()
-	data := struct {
-		Articles []model.Article
-		Tags     []model.Tag
-	}{articles, tags}
-	render.New().SetDestination(w).SetTemplates("tag_articles.html").View(data)
+	data := BlogData{Articles: articles, Tags: tags}
+	render.New().SetDestination(w).SetTemplates("blog.html").View(data)
 }
 
 func (b Blog) Search(w http.ResponseWriter, r *http.Request) {
 	searcher := service.NewArticleSearcher()
-	articles := service.DoSearch(searcher, r.URL.Query().Get("keywords")).([]model.Article)
+	keywords := r.URL.Query().Get("keywords")
+	articles := service.DoSearch(searcher, keywords).([]model.Article)
 	tags := model.NewTagModel().FetchTagsWithArticlesNum()
-	data := struct {
-		Articles []model.Article
-		Tags     []model.Tag
-	}{articles, tags}
+	data := BlogData{articles, tags, keywords}
 	render.New().SetDestination(w).SetTemplates("blog.html").View(data)
 }

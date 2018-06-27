@@ -1,13 +1,13 @@
 package config
 
 import (
-	"os"
 	"github.com/kongoole/minreuse-go/env"
+	"os"
 )
 
 var configuration = map[string]string{
-	"view_folder": "view/",
-	"controller_folder":"controller/",
+	"view_folder":       "view/",
+	"controller_folder": "controller/",
 }
 
 func init() {
@@ -19,4 +19,3 @@ func init() {
 	// set env config
 	env.ParseEnv()
 }
-

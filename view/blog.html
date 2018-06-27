@@ -1,7 +1,7 @@
-{{template "header"}}
+{{template "header" .}}
 <div class="row">
     <div class="col l8 m8 s12 articles">
-    {{range .Articles}}
+        {{range .Articles}}
         <div class="card darken-1">
             <div class="card-content black-text">
                 <span class="card-title">
@@ -9,11 +9,10 @@
                 </span>
             </div>
         </div>
-    {{end}}
+        {{end}}
     </div>
     <div class="col l4 m4 s12">
-    {{template "slogan"}}
-    {{template "tag" .Tags}}
+        {{template "slogan"}} {{template "tag" .Tags}}
     </div>
 </div>
 {{template "footer"}}

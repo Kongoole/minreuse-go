@@ -1,8 +1,8 @@
 package route
 
 import (
-	"net/http"
 	"github.com/kongoole/minreuse-go/controller"
+	"net/http"
 )
 
 func Register() {
