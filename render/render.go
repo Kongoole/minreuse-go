@@ -2,11 +2,12 @@ package render
 
 import (
 	"fmt"
-	"gopkg.in/russross/blackfriday.v2"
 	"html/template"
 	"net/http"
 	"os"
 	"strings"
+
+	"gopkg.in/russross/blackfriday.v2"
 )
 
 type Render struct {
@@ -18,6 +19,11 @@ type Render struct {
 	hasTags   bool
 }
 
+type AdminRender struct {
+	templates []string
+	wr        http.ResponseWriter
+}
+
 func New() *Render {
 	return &Render{
 		hasHeader: true,
@@ -25,6 +31,10 @@ func New() *Render {
 		hasSlogan: true,
 		hasTags:   true,
 	}
+}
+
+func NewAdmin() *AdminRender {
+	return &AdminRender{}
 }
 
 func (r *Render) SetHasHeader(status bool) *Render {
@@ -78,6 +88,7 @@ func (r *Render) View(data interface{}) {
 	if r.hasTags {
 		r.templates = append(r.templates, os.Getenv("view_folder")+"common/tag.html")
 	}
+
 	// New() must has a parameter, here use the first file name
 	t, _ := template.New(strings.Split(r.templates[0], "/")[1]).Funcs(template.FuncMap{"markDown": markDowner}).ParseFiles(r.templates...)
 	t.Execute(r.wr, data)

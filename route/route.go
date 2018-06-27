@@ -13,6 +13,9 @@ func Register() {
 	http.HandleFunc("/tag", controller.Blog{}.TagArticles)
 	http.HandleFunc("/blog/search", controller.Blog{}.Search)
 	http.HandleFunc("/about", controller.About{}.Index)
+
+	http.HandleFunc("/admin/index", controller.Admin{}.Index)
+
 	http.HandleFunc("/public/", serveResource)
 }
 
