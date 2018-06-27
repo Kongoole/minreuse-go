@@ -26,7 +26,7 @@ func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 	articles := model.NewArticleModel().FetchAll()
 	tags := model.NewTagModel().FetchTagsWithArticlesNum()
 	data := BlogData{Articles: articles, Tags: tags}
-	render.New().SetDestination(w).SetTemplates("blog.html").View(data)
+	render.NewFrontRender().SetTemplates("blog.html").Render(w, data)
 }
 
 // Article shows an article
@@ -41,7 +41,7 @@ func (b Blog) Article(w http.ResponseWriter, r *http.Request) {
 		Article model.Article
 		Tags    []model.Tag
 	}{article, tags}
-	render.New().SetDestination(w).SetTemplates("article.html").SetHasSlogan(false).View(data)
+	render.NewFrontRender().SetTemplates("article.html").SetHasSlogan(false).Render(w, data)
 }
 
 func (b Blog) TagArticles(w http.ResponseWriter, r *http.Request) {
@@ -52,7 +52,7 @@ func (b Blog) TagArticles(w http.ResponseWriter, r *http.Request) {
 	articles := model.NewArticleModel().FetchTagArticlesByTagId(tagId)
 	tags := model.NewTagModel().FetchTagsWithArticlesNum()
 	data := BlogData{Articles: articles, Tags: tags}
-	render.New().SetDestination(w).SetTemplates("blog.html").View(data)
+	render.NewFrontRender().SetTemplates("blog.html").Render(w, data)
 }
 
 func (b Blog) Search(w http.ResponseWriter, r *http.Request) {
@@ -61,5 +61,5 @@ func (b Blog) Search(w http.ResponseWriter, r *http.Request) {
 	articles := service.DoSearch(searcher, keywords).([]model.Article)
 	tags := model.NewTagModel().FetchTagsWithArticlesNum()
 	data := BlogData{articles, tags, keywords}
-	render.New().SetDestination(w).SetTemplates("blog.html").View(data)
+	render.NewFrontRender().SetTemplates("blog.html").Render(w, data)
 }

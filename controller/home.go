@@ -10,5 +10,5 @@ type Home struct{}
 
 // Index shows home page
 func (h Home) Index(w http.ResponseWriter, r *http.Request) {
-	render.New().SetDestination(w).SetTemplates("home.html").View(nil)
+	render.NewFrontRender().SetTemplates("home.html").Render(w, nil)
 }

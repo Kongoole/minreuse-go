@@ -1,0 +1,66 @@
+{{define "header"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>MINREUSE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="/public/css/icons.css">
+    <link rel="stylesheet" href="/public/css/materialize.css">
+    <!--mobile nav-->
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.sidenav');
+            M.Sidenav.init(elems, {});
+            var collapsibleElem = document.querySelector('.collapsible');
+            M.Collapsible.init(collapsibleElem, {});
+        });
+    </script>
+    <style>
+        header, main, footer {
+            padding-left: 300px;
+        }
+
+        @media only screen and (max-width : 992px) {
+            header, main, footer {
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <ul id="slide-out" class="sidenav sidenav-fixed">
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li><a class="waves-effect waves-teal" style="padding: 0 16px" href="/">网站</a></li>
+                <li>
+                    <a class="collapsible-header waves-effect waves-teal" tabindex="0">文章管理</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="#!">文章</a></li>
+                            <li><a href="#!">标签</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="collapsible-header waves-effect waves-teal" tabindex="0">网站内容</a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="#!">项目</a></li>
+                            <li><a href="#!">简介</a></li>
+                            <li><a href="#!">菜单</a></li>
+                            <li><a href="#!">公共</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</header>
+<main>
+<div class="container">
+{{end}}

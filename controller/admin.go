@@ -11,5 +11,5 @@ type Admin struct {
 }
 
 func (a Admin) Index(w http.ResponseWriter, r *http.Request) {
-	render.New().SetDestination(w).SetTemplates("admin/index.html").View(nil)
+	render.NewAdminRender().SetTemplates("admin/index.html").Render(w, nil)
 }
