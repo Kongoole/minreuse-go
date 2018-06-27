@@ -1,8 +1,9 @@
 package route
 
 import (
-	"github.com/kongoole/minreuse-go/controller"
 	"net/http"
+
+	"github.com/kongoole/minreuse-go/controller"
 )
 
 func Register() {
@@ -11,6 +12,7 @@ func Register() {
 	http.HandleFunc("/article", controller.Blog{}.Article)
 	http.HandleFunc("/tag", controller.Blog{}.TagArticles)
 	http.HandleFunc("/blog/search", controller.Blog{}.Search)
+	http.HandleFunc("/about", controller.About{}.Index)
 	http.HandleFunc("/public/", serveResource)
 }
 

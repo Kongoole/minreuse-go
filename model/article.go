@@ -89,13 +89,13 @@ func (a ArticleModel) FetchTagArticlesByTagId(tagId int) []Article {
 
 func (a ArticleModel) FetchArticlesByKeyWords(keywords string) []Article {
 	(&a).InitSlave()
-	stmt, err := a.Slave.Prepare("SELECT article_id, title, content FROM article WHERE title LIKE concat('%', ?, '%') OR content LIKE concat('%', ?, '%')")
+	stmt, err := a.Slave.Prepare("SELECT article_id, title, content FROM article WHERE title LIKE concat('%', ?, '%')")
 	if err != nil {
 		log.Fatal("failed to search article, err: " + err.Error())
 	}
 	defer stmt.Close()
 
-	rows, err := stmt.Query(keywords, keywords)
+	rows, err := stmt.Query(keywords)
 	if err != nil {
 		log.Fatal("failed to search article, err:" + err.Error())
 	}

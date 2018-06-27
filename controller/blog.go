@@ -10,7 +10,9 @@ import (
 	"github.com/kongoole/minreuse-go/service"
 )
 
-type Blog struct{}
+type Blog struct {
+	Controller
+}
 
 // BlogData is used to render blog page
 type BlogData struct {
