@@ -1,10 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{{template "header"}}
+<div class="row">
+  <div class="input-field col s6">
+    <input id="password" type="text" class="validate">
+    <label for="password">搜索</label>
+  </div>
+  <div class="input-field col s6">
+    <button class="btn waves-effect waves-light right red lighten-2">写文章</button>
+  </div>
+</div>
+<div class="row">
+  <div class="col l12">
+    <table>
+      <thead>
+        <tr>
+          <th>标题</th>
+          <th>创建时间</th>
+          <th>更新时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
 
-</body>
-</html>
+      <tbody>
+        {{range .}}
+        <tr>
+          <td>{{.Title}}</td>
+          <td>{{.CreateAt}}</td>
+          <td>{{.UpdateAt}}
+            <td>
+              <td><button class="btn waves-effect waves-light right">编辑</button></td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </div>
+</div>
+{{template "footer"}}

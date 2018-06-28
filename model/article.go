@@ -15,6 +15,8 @@ type Article struct {
 	ArticleId int
 	Title     string
 	Content   string
+	CreateAt  string
+	UpdateAt  string
 }
 
 func NewArticleModel() ArticleModel {
@@ -23,7 +25,7 @@ func NewArticleModel() ArticleModel {
 
 func (a ArticleModel) FetchAll() []Article {
 	(&a).InitSlave()
-	stmt, err := a.Slave.Prepare("SELECT article_id, title FROM article ORDER BY update_at DESC")
+	stmt, err := a.Slave.Prepare("SELECT article_id, title, create_at, update_at FROM article ORDER BY update_at DESC")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,7 +40,7 @@ func (a ArticleModel) FetchAll() []Article {
 	var articles []Article
 	for rows.Next() {
 		article := Article{}
-		rows.Scan(&article.ArticleId, &article.Title)
+		rows.Scan(&article.ArticleId, &article.Title, &article.CreateAt, &article.UpdateAt)
 		articles = append(articles, article)
 	}
 

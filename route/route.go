@@ -16,6 +16,7 @@ func Register() {
 
 	http.HandleFunc("/admin/index", controller.Admin{}.Index)
 	http.HandleFunc("/admin/article/create", controller.Admin{}.ArticleCreate)
+	http.HandleFunc("/admin/article/list", controller.Admin{}.ArticleList)
 
 	http.HandleFunc("/public/", serveResource)
 }
