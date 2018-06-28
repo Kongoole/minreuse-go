@@ -11,5 +11,5 @@ type About struct {
 }
 
 func (a About) Index(w http.ResponseWriter, r *http.Request) {
-	render.NewFrontRender().SetHasSlogan(false).SetTemplates("about.html").Render(w, nil)
+	render.NewFrontRender().SetHasSlogan(false).SetHasFooter(false).SetTemplates("about.html").Render(w, nil)
 }
