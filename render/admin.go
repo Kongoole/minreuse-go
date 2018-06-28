@@ -20,7 +20,7 @@ func (a *AdminRender) SetTemplates(fileNames ...string) *AdminRender {
 	for _, fileName := range fileNames {
 		a.templates = append(a.templates, viewFolder+fileName)
 	}
-	a.templates = append(a.templates, viewFolder + "admin/header.html", viewFolder + "admin/footer.html")
+	a.templates = append(a.templates, viewFolder+"admin/header.html", viewFolder+"admin/footer.html")
 	return a
 }
 

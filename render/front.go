@@ -60,6 +60,10 @@ func markDowner(args ...interface{}) template.HTML {
 	return template.HTML(s)
 }
 
+func unescape(data string) template.HTML {
+	return template.HTML(data)
+}
+
 func (r *FrontRender) Render(w io.Writer, data interface{}) {
 	if r.hasHeader {
 		r.templates = append(r.templates, os.Getenv("view_folder")+"common/header.html")
@@ -75,6 +79,7 @@ func (r *FrontRender) Render(w io.Writer, data interface{}) {
 	}
 
 	// New() must has a parameter, here use the first file name
-	t, _ := template.New(strings.Split(r.templates[0], "/")[1]).Funcs(template.FuncMap{"markDown": markDowner}).ParseFiles(r.templates...)
+	t, _ := template.New(strings.Split(r.templates[0], "/")[1]).Funcs(template.FuncMap{"markDown": markDowner, "html": unescape}).
+		ParseFiles(r.templates...)
 	t.Execute(w, data)
 }

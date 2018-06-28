@@ -2,7 +2,10 @@ package model
 
 import (
 	"log"
+	"strconv"
 )
+
+const PAGE_SIZE = 7
 
 type ArticleModel struct {
 	Model
@@ -40,6 +43,53 @@ func (a ArticleModel) FetchAll() []Article {
 	}
 
 	return articles
+}
+
+func (a ArticleModel) FetchWithPagination(offset int) []Article {
+	(&a).InitSlave()
+	stmt, err := a.Slave.Prepare("SELECT article_id, title FROM article ORDER BY update_at DESC LIMIT " +
+		strconv.Itoa(offset*PAGE_SIZE) + ", " + strconv.Itoa(PAGE_SIZE))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var articles []Article
+	for rows.Next() {
+		article := Article{}
+		rows.Scan(&article.ArticleId, &article.Title)
+		articles = append(articles, article)
+	}
+
+	return articles
+}
+
+// FetchArticleAmount fetch all article amount
+func (a ArticleModel) FetchArticleAmount() int {
+	(&a).InitSlave()
+	stmt, err := a.Slave.Prepare("SELECT COUNT(article_id) FROM article")
+	if err != nil {
+		log.Fatal("fail to fetch total article amount")
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+	if err != nil {
+		log.Fatal("fail to fetch total article amount")
+	}
+	defer rows.Close()
+
+	var total int
+	for rows.Next() {
+		rows.Scan(&total)
+	}
+	return total
 }
 
 func (a ArticleModel) FetchOneByArticleId(articleId int) Article {

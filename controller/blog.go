@@ -16,16 +16,29 @@ type Blog struct {
 
 // BlogData is used to render blog page
 type BlogData struct {
-	Articles []model.Article
-	Tags     []model.Tag
-	Keywords string
+	Articles   []model.Article
+	Tags       []model.Tag
+	Keywords   string
+	Pagination string
 }
 
 // Blog shows blog list
 func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
-	articles := model.NewArticleModel().FetchAll()
+	page := r.URL.Query().Get("page")
+	offset := 0
+	if page != "" {
+		var err error
+		offset, err = strconv.Atoi(page)
+		if err != nil {
+			log.Println("fail to get off")
+		}
+	}
+	articleModel := model.NewArticleModel()
+	articles := articleModel.FetchWithPagination(offset)
+	total := articleModel.FetchArticleAmount()
+	pagination := service.NewPagination().Html(total, offset)
 	tags := model.NewTagModel().FetchTagsWithArticlesNum()
-	data := BlogData{Articles: articles, Tags: tags}
+	data := BlogData{Articles: articles, Tags: tags, Pagination: pagination}
 	render.NewFrontRender().SetTemplates("blog.html").Render(w, data)
 }
 
@@ -62,6 +75,6 @@ func (b Blog) Search(w http.ResponseWriter, r *http.Request) {
 	keywords := r.URL.Query().Get("keywords")
 	articles := service.DoSearch(searcher, keywords).([]model.Article)
 	tags := model.NewTagModel().FetchTagsWithArticlesNum()
-	data := BlogData{articles, tags, keywords}
+	data := BlogData{Articles: articles, Tags: tags, Keywords: keywords}
 	render.NewFrontRender().SetTemplates("blog.html").Render(w, data)
 }
