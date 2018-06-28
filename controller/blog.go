@@ -44,6 +44,7 @@ func (b Blog) Article(w http.ResponseWriter, r *http.Request) {
 	render.NewFrontRender().SetTemplates("article.html").SetHasSlogan(false).Render(w, data)
 }
 
+// TagArticles shows articles belonging to a tag
 func (b Blog) TagArticles(w http.ResponseWriter, r *http.Request) {
 	tagId, err := strconv.Atoi(r.URL.Query().Get("tag_id"))
 	if err != nil {
@@ -55,6 +56,7 @@ func (b Blog) TagArticles(w http.ResponseWriter, r *http.Request) {
 	render.NewFrontRender().SetTemplates("blog.html").Render(w, data)
 }
 
+// Search searches articles by keyword
 func (b Blog) Search(w http.ResponseWriter, r *http.Request) {
 	searcher := service.NewArticleSearcher()
 	keywords := r.URL.Query().Get("keywords")
