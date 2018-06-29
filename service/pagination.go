@@ -14,7 +14,7 @@ func NewPagination() pagination {
 }
 
 // Html makes pagination html
-func (p pagination) Html(total int, offset int) string {
+func (p pagination) HTML(total int, offset int, link string) string {
 	// caculate pages
 	var pages int
 	if total == model.PAGE_SIZE {
@@ -30,7 +30,7 @@ func (p pagination) Html(total int, offset int) string {
 			if i == offset+1 {
 				class = "active"
 			}
-			pagination = pagination + "<li class=\"" + class + "\"><a href=\"/blog?page=" + strconv.Itoa(i-1) + "\">" +
+			pagination = pagination + "<li class=\"" + class + "\"><a href=\"" + link + "?page=" + strconv.Itoa(i-1) + "\">" +
 				strconv.Itoa(i) + "</a></li>"
 		}
 	}

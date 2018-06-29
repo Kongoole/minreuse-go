@@ -22,7 +22,7 @@ type BlogData struct {
 	Pagination string
 }
 
-// Blog shows blog list
+// Index shows blog list
 func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 	page := r.URL.Query().Get("page")
 	offset := 0
@@ -36,7 +36,7 @@ func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 	articleModel := model.NewArticleModel()
 	articles := articleModel.FetchWithPagination(offset)
 	total := articleModel.FetchArticleAmount()
-	pagination := service.NewPagination().Html(total, offset)
+	pagination := service.NewPagination().HTML(total, offset, "/blog")
 	tags := model.NewTagModel().FetchTagsWithArticlesNum()
 	data := BlogData{Articles: articles, Tags: tags, Pagination: pagination}
 	render.NewFrontRender().SetTemplates("blog.html").Render(w, data)
@@ -44,12 +44,12 @@ func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 
 // Article shows an article
 func (b Blog) Article(w http.ResponseWriter, r *http.Request) {
-	articleId, err := strconv.Atoi(r.URL.Query().Get("article_id"))
+	articleID, err := strconv.Atoi(r.URL.Query().Get("article_id"))
 	if err != nil {
 		log.Fatal(err)
 	}
-	article := model.NewArticleModel().FetchOneByArticleId(articleId)
-	tags := model.NewTagModel().FetchTagsByArticleId(articleId)
+	article := model.NewArticleModel().FetchOneByArticleId(articleID)
+	tags := model.NewTagModel().FetchTagsByArticleId(articleID)
 	data := struct {
 		Article model.Article
 		Tags    []model.Tag
@@ -59,11 +59,11 @@ func (b Blog) Article(w http.ResponseWriter, r *http.Request) {
 
 // TagArticles shows articles belonging to a tag
 func (b Blog) TagArticles(w http.ResponseWriter, r *http.Request) {
-	tagId, err := strconv.Atoi(r.URL.Query().Get("tag_id"))
+	tagID, err := strconv.Atoi(r.URL.Query().Get("tag_id"))
 	if err != nil {
 		log.Fatal(err)
 	}
-	articles := model.NewArticleModel().FetchTagArticlesByTagId(tagId)
+	articles := model.NewArticleModel().FetchTagArticlesByTagId(tagID)
 	tags := model.NewTagModel().FetchTagsWithArticlesNum()
 	data := BlogData{Articles: articles, Tags: tags}
 	render.NewFrontRender().SetTemplates("blog.html").Render(w, data)

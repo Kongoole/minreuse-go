@@ -26,6 +26,6 @@ func (a *AdminRender) SetTemplates(fileNames ...string) *AdminRender {
 
 func (a *AdminRender) Render(w io.Writer, data interface{}) {
 	// New() must has a parameter, here use the first file name
-	t, _ := template.New(strings.Split(a.templates[0], "/")[2]).ParseFiles(a.templates...)
+	t, _ := template.New(strings.Split(a.templates[0], "/")[2]).Funcs(template.FuncMap{"html": unescape}).ParseFiles(a.templates...)
 	t.Execute(w, data)
 }

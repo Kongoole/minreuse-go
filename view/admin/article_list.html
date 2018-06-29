@@ -5,7 +5,7 @@
     <label for="password">搜索</label>
   </div>
   <div class="input-field col s6">
-    <button class="btn waves-effect waves-light right red lighten-2">写文章</button>
+    <a href="/admin/article/create" class="btn waves-effect waves-light right red lighten-2">写文章</a>
   </div>
 </div>
 <div class="row">
@@ -21,17 +21,22 @@
       </thead>
 
       <tbody>
-        {{range .}}
+        {{range .Articles}}
         <tr>
           <td>{{.Title}}</td>
           <td>{{.CreateAt}}</td>
           <td>{{.UpdateAt}}
             <td>
-              <td><button class="btn waves-effect waves-light right">编辑</button></td>
+              <td>
+                <button class="btn waves-effect waves-light right">编辑</button>
+              </td>
         </tr>
         {{end}}
       </tbody>
     </table>
+    <ul class="pagination">
+      {{.Pagination|html}}
+    </ul>
   </div>
 </div>
 {{template "footer"}}
