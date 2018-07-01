@@ -40,5 +40,9 @@ func (a Admin) ArticleList(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a Admin) ArticleCreate(w http.ResponseWriter, r *http.Request) {
-	render.NewAdminRender().SetTemplates("admin/article_create.html").Render(w, nil)
+	tags := model.NewTagModel().FetchAll()
+	data := struct {
+		Tags []model.Tag
+	}{tags}
+	render.NewAdminRender().SetTemplates("admin/article_create.html").Render(w, data)
 }

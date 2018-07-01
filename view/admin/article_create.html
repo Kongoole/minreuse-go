@@ -13,16 +13,9 @@
             </div>
         </div>
         <div class="row">
-            <span class="new badge" data-badge-caption="">Google</span>
-            <span class="new badge" data-badge-caption="">Google</span>
-            <span class="new badge" data-badge-caption="">Google</span>
-            <span class="new badge" data-badge-caption="">Google</span>
-            <span class="new badge" data-badge-caption="">Google</span>
-            <span class="new badge" data-badge-caption="">Google</span>
-            <span class="new badge" data-badge-caption="">Google</span>
-            <span class="new badge" data-badge-caption="">Google</span>
-            <span class="new badge" data-badge-caption="">Google</span>
-            <span class="new badge" data-badge-caption="">Google</span>
+            {{range .Tags}}
+            <span class="new badge tag" data-badge-caption="">{{.Name}}</span>
+            {{end}}
         </div>
         <!--editor-->
         <div class="row">
@@ -42,15 +35,16 @@
 </div>
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('.chips');
+        var elems = document.querySelectorAll('.chips')
+        var tags = document.getElementsByClassName("tag")
+        var auto = {}
+        for (var i = 0; i < tags.length; i++) {
+            auto[tags[i].textContent] = null
+        }
         M.Chips.init(elems, {
             placeholder: '输入标签',
             autocompleteOptions: {
-                data: {
-                    'Apple': null,
-                    'Microsoft': null,
-                    'Google': null
-                },
+                data: auto,
                 limit: Infinity,
                 minLength: 1
             }

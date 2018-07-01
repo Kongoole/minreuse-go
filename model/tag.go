@@ -16,6 +16,30 @@ func NewTagModel() TagModel {
 	return TagModel{}
 }
 
+// FetchAll fetches all tags
+func (t TagModel) FetchAll() []Tag {
+	t.InitSlave()
+	stmt, err := t.Slave.Prepare("SELECT tag_id, name FROM tag")
+	if err != nil {
+		log.Fatal("fail to fetch tags:" + err.Error())
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+	if err != nil {
+		log.Fatal("fail to fetch tags:" + err.Error())
+	}
+	defer rows.Close()
+
+	var tags []Tag
+	for rows.Next() {
+		tag := Tag{}
+		rows.Scan(&tag.Id, &tag.Name)
+		tags = append(tags, tag)
+	}
+	return tags
+}
+
 // fetch article tags
 func (t TagModel) FetchTagsByArticleId(articleId int) []Tag {
 	t.InitSlave()
