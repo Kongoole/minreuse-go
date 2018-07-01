@@ -22,7 +22,7 @@
       <tbody>
         {{range .Articles}}
         <tr>
-          <td>{{.Title}}</td>
+          <td><a target="__blank" href="/article?article_id={{.ArticleId}}">{{.Title}}</a></td>
           <td>{{.CreateAt}}</td>
           <td>{{.UpdateAt}}
             <td>

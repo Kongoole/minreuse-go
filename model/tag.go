@@ -1,6 +1,9 @@
 package model
 
-import "log"
+import (
+	"log"
+	"strconv"
+)
 
 type TagModel struct {
 	Model
@@ -66,10 +69,11 @@ func (t TagModel) FetchTagsByArticleId(articleId int) []Tag {
 }
 
 // fetch tags with article amount
-func (t TagModel) FetchTagsWithArticlesNum() []Tag {
+func (t TagModel) FetchTagsWithArticlesNum(status int) []Tag {
 	t.InitSlave()
 	stmt, err := t.Slave.Prepare("SELECT tag.name, tag.tag_id, count(1) AS num FROM tag JOIN article_tag AS at ON " +
-		"tag.tag_id=at.tag_id group by at.tag_id;")
+		"tag.tag_id=at.tag_id JOIN article on at.article_id=article.article_id WHERE article.status=" +
+		strconv.Itoa(status) + " group by at.tag_id")
 	if err != nil {
 		log.Fatal(err)
 	}

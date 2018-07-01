@@ -29,7 +29,7 @@ func (a Admin) ArticleList(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	articleModel := model.NewArticleModel()
-	articles := articleModel.FetchWithPagination(offset)
+	articles := articleModel.FetchWithPagination(offset, articleModel.StatusPublished, articleModel.StatusUnpublished)
 	total := articleModel.FetchArticleAmount()
 	pagination := service.NewPagination().HTML(total, offset, "/admin/article/list")
 	data := struct {

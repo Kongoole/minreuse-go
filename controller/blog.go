@@ -34,10 +34,10 @@ func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	articleModel := model.NewArticleModel()
-	articles := articleModel.FetchWithPagination(offset)
-	total := articleModel.FetchArticleAmount()
+	articles := articleModel.FetchWithPagination(offset, articleModel.StatusPublished)
+	total := articleModel.FetchArticleAmount(articleModel.StatusPublished)
 	pagination := service.NewPagination().HTML(total, offset, "/blog")
-	tags := model.NewTagModel().FetchTagsWithArticlesNum()
+	tags := model.NewTagModel().FetchTagsWithArticlesNum(articleModel.StatusPublished)
 	data := BlogData{Articles: articles, Tags: tags, Pagination: pagination}
 	render.NewFrontRender().SetTemplates("blog.html").Render(w, data)
 }
@@ -63,8 +63,9 @@ func (b Blog) TagArticles(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	articles := model.NewArticleModel().FetchTagArticlesByTagId(tagID)
-	tags := model.NewTagModel().FetchTagsWithArticlesNum()
+	articleModel := model.NewArticleModel()
+	articles := articleModel.FetchTagArticlesByTagId(tagID)
+	tags := model.NewTagModel().FetchTagsWithArticlesNum(articleModel.StatusPublished)
 	data := BlogData{Articles: articles, Tags: tags}
 	render.NewFrontRender().SetTemplates("blog.html").Render(w, data)
 }
@@ -74,7 +75,7 @@ func (b Blog) Search(w http.ResponseWriter, r *http.Request) {
 	searcher := service.NewArticleSearcher()
 	keywords := r.URL.Query().Get("keywords")
 	articles := service.DoSearch(searcher, keywords).([]model.Article)
-	tags := model.NewTagModel().FetchTagsWithArticlesNum()
+	tags := model.NewTagModel().FetchTagsWithArticlesNum(searcher.ArticleModel.StatusPublished)
 	data := BlogData{Articles: articles, Tags: tags, Keywords: keywords}
 	render.NewFrontRender().SetTemplates("blog.html").Render(w, data)
 }

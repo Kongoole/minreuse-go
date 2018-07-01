@@ -7,8 +7,13 @@ import (
 
 const PAGE_SIZE = 7
 
+const unpublished = 1
+const published = 2
+
 type ArticleModel struct {
 	Model
+	StatusPublished   int
+	StatusUnpublished int
 }
 
 type Article struct {
@@ -19,10 +24,12 @@ type Article struct {
 	UpdateAt  string
 }
 
+// NewArticleModel creates an ArticleModel instance
 func NewArticleModel() ArticleModel {
-	return ArticleModel{}
+	return ArticleModel{StatusPublished: published, StatusUnpublished: unpublished}
 }
 
+// FetchAll fetches all articles
 func (a ArticleModel) FetchAll() []Article {
 	(&a).InitSlave()
 	stmt, err := a.Slave.Prepare("SELECT article_id, title, create_at, update_at FROM article ORDER BY update_at DESC")
@@ -47,10 +54,46 @@ func (a ArticleModel) FetchAll() []Article {
 	return articles
 }
 
-func (a ArticleModel) FetchWithPagination(offset int) []Article {
+// FetchAllPublished fetches all published articles
+func (a ArticleModel) FetchAllPublished() []Article {
 	(&a).InitSlave()
-	stmt, err := a.Slave.Prepare("SELECT article_id, title FROM article ORDER BY update_at DESC LIMIT " +
-		strconv.Itoa(offset*PAGE_SIZE) + ", " + strconv.Itoa(PAGE_SIZE))
+	stmt, err := a.Slave.Prepare("SELECT article_id, title, create_at, update_at FROM article WHERE status=" +
+		strconv.Itoa(a.StatusPublished) + " ORDER BY update_at DESC")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var articles []Article
+	for rows.Next() {
+		article := Article{}
+		rows.Scan(&article.ArticleId, &article.Title, &article.CreateAt, &article.UpdateAt)
+		articles = append(articles, article)
+	}
+
+	return articles
+}
+
+func (a ArticleModel) FetchWithPagination(offset int, statuses ...int) []Article {
+	(&a).InitSlave()
+	sql := "SELECT article_id, title FROM article"
+	if len(statuses) > 0 {
+		statusStr := "("
+		for _, status := range statuses {
+			statusStr += strconv.Itoa(status) + ","
+		}
+		// remove last ","
+		statusStr = statusStr[:len(statusStr)-1] + ")"
+		sql += " WHERE status IN " + statusStr
+	}
+	sql = sql + " ORDER BY update_at DESC LIMIT " + strconv.Itoa(offset*PAGE_SIZE) + ", " + strconv.Itoa(PAGE_SIZE)
+	stmt, err := a.Slave.Prepare(sql)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -73,9 +116,18 @@ func (a ArticleModel) FetchWithPagination(offset int) []Article {
 }
 
 // FetchArticleAmount fetch all article amount
-func (a ArticleModel) FetchArticleAmount() int {
+func (a ArticleModel) FetchArticleAmount(statuses ...int) int {
 	(&a).InitSlave()
-	stmt, err := a.Slave.Prepare("SELECT COUNT(article_id) FROM article")
+	sql := "SELECT COUNT(article_id) FROM article"
+	if len(statuses) > 0 {
+		statusStr := "("
+		for _, status := range statuses {
+			statusStr += strconv.Itoa(status) + ","
+		}
+		statusStr = statusStr[:len(statusStr)-1] + ")"
+		sql += " WHERE status IN " + statusStr
+	}
+	stmt, err := a.Slave.Prepare(sql)
 	if err != nil {
 		log.Fatal("fail to fetch total article amount")
 	}
@@ -121,7 +173,7 @@ func (a ArticleModel) FetchOneByArticleId(articleId int) Article {
 func (a ArticleModel) FetchTagArticlesByTagId(tagId int) []Article {
 	(&a).InitSlave()
 	stmt, err := a.Slave.Prepare("SELECT a.article_id, a.title FROM article AS a INNER JOIN article_tag AS at" +
-		" ON a.article_id=at.article_id WHERE at.tag_id=?")
+		" ON a.article_id=at.article_id WHERE at.tag_id=? AND a.status=" + strconv.Itoa(a.StatusPublished))
 	if err != nil {
 		log.Fatal(err)
 	}
