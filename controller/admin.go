@@ -46,3 +46,11 @@ func (a Admin) ArticleCreate(w http.ResponseWriter, r *http.Request) {
 	}{tags}
 	render.NewAdminRender().SetTemplates("admin/article_create.html").Render(w, data)
 }
+
+func (a Admin) SaveArticle(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func (a Admin) PublishArticle(w http.ResponseWriter, r *http.Request) {
+
+}

@@ -3,8 +3,8 @@
     <div class="col l12">
         <div class="row">
             <div class="input-field col s12">
-                <input id="password" type="text" class="validate">
-                <label for="password">Title</label>
+                <input name="title" id="title" type="text" class="validate">
+                <label for="title">标题</label>
             </div>
         </div>
         <div class="row">
@@ -50,5 +50,8 @@
             }
         });
     });
+    $(document).ready(function(){
+        alert();
+    })
 </script>
 {{template "footer"}}
