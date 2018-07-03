@@ -1,4 +1,18 @@
 {{template "header"}}
+<link rel="stylesheet" href="/public/plugin/editor-md/css/editormd.css" />
+<style>
+ul>li {
+    list-style-type:disc!important;
+}
+.divider {
+    overflow: inherit;
+    background-color: inherit;
+}
+select {
+    display: inline-block;
+    width: auto;
+}
+</style>
 <div class="row">
     <div class="col l12">
         <div class="row">
@@ -15,30 +29,33 @@
         <div class="row">
             {{range .Tags}}
             <span class="new badge tag" data-badge-caption="">{{.Name}}</span>
+            <input type="hidden" class="{{.Name}}" value="{{.Id}}">
             {{end}}
         </div>
         <!--editor-->
         <div class="row">
             <div class="input-field col s12">
-                <object type="text/html" style="width: 100%;min-height: 660px" data="/public/markdown.html"></object>
+                <!-- <object type="text/html" style="width: 100%;min-height: 660px" data="/public/markdown.html"></object> -->
+                <div id="test-editormd"></div>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s6">
-                <a class="btn-large waves-effect waves-light" style="width: 100%;">保存</a>
+                <a class="btn-large waves-effect waves-light save-article" style="width: 100%;">保存</a>
             </div>
             <div class="input-field col s6">
-                <a class="btn-large waves-effect waves-light red lighten-2" style="width: 100%;">发布</a>
+                <a class="btn-large waves-effect waves-light red lighten-2 publish-article" style="width: 100%;">发布</a>
             </div>
         </div>
     </div>
 </div>
+<script src="/public/plugin/editor-md/editormd.min.js"></script>
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('.chips')
-        var tags = document.getElementsByClassName("tag")
-        var auto = {}
-        for (var i = 0; i < tags.length; i++) {
+    $(document).ready(function(){
+        let elems = document.querySelectorAll('.chips')
+        let tags = document.getElementsByClassName("tag")
+        let auto = {}
+        for (let i = 0; i < tags.length; i++) {
             auto[tags[i].textContent] = null
         }
         M.Chips.init(elems, {
@@ -49,9 +66,51 @@
                 minLength: 1
             }
         });
-    });
-    $(document).ready(function(){
-        alert();
+        // markdown instance
+        var mdEditor;
+        $(function() {
+            mdEditor = editormd("test-editormd", {
+                width   : "99%",
+                height  : 640,
+                syncScrolling : "single",
+                path    : "/public/plugin/editor-md/lib/"
+            });
+        });
+        $(".save-article").click(function(){
+            var tagIds = []
+            $('.chip').each(function(){
+                var tagName = $(this)
+                .clone()    //clone the element
+                .children() //select all the children
+                .remove()   //remove all the children
+                .end()  //again go back to selected element
+                .text();
+                tagIds.push($('input[class="'+tagName+'"]').val())
+            })
+            var title = $('input[name="title"]').val();
+            var content = mdEditor.getMarkdown();
+            $.ajax({
+                url: "/admin/article/save",
+                type: "post",
+                data: {
+                    title: title,
+                    content: content,
+                    tagIds: JSON.stringify(tagIds)
+                },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data.code);
+                    if (data.code === "200") {
+                        alert("保存成功");
+                    } else {
+                        alert("保存失败：" + data.msg);
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        });
     })
 </script>
 {{template "footer"}}

@@ -48,7 +48,13 @@ func (a Admin) ArticleCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a Admin) SaveArticle(w http.ResponseWriter, r *http.Request) {
-
+	r.ParseForm()
+	title := r.FormValue("title")
+	content := r.FormValue("content")
+	// tagIds := r.FormValue("tagIds")
+	articleModel := model.NewArticleModel()
+	articleModel.AddArticle(title, content, 0, articleModel.StatusUnpublished)
+	w.Write([]byte(`{"code":"200"}`))
 }
 
 func (a Admin) PublishArticle(w http.ResponseWriter, r *http.Request) {

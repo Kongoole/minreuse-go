@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"log"
 	"strconv"
 )
@@ -211,4 +212,30 @@ func (a ArticleModel) FetchArticlesByKeyWords(keywords string) []Article {
 		articles = append(articles, article)
 	}
 	return articles
+}
+
+func (a ArticleModel) AddArticle(title, content string, author_id, status int) (id int, err error) {
+	if title == "" {
+		return 0, errors.New("title cannot be empty")
+	}
+	if content == "" {
+		return 0, errors.New("content cannot be empty")
+	}
+
+	a.InitMaster()
+	stmt, err := a.Master.Prepare("INSERT into article(`title`, `content`, `author_id`, `status`) VALUES (?, ?, ?, ?)")
+	if err != nil {
+		log.Fatal("add article: failed to prepare, " + err.Error())
+	}
+	defer stmt.Close()
+	res, err := stmt.Exec(title, content, author_id, status)
+	if err != nil {
+		log.Fatal("add article: failed to exec " + err.Error())
+	}
+
+	lastId, err := res.LastInsertId()
+	if err != nil {
+		log.Fatal("add article: failed to get last insert id, " + err.Error())
+	}
+	return int(lastId), nil
 }
