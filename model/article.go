@@ -214,7 +214,7 @@ func (a ArticleModel) FetchArticlesByKeyWords(keywords string) []Article {
 	return articles
 }
 
-func (a ArticleModel) AddArticle(title, content string, author_id, status int) (id int, err error) {
+func (a ArticleModel) AddArticle(title, content string, author_id, status int) (int, error) {
 	if title == "" {
 		return 0, errors.New("title cannot be empty")
 	}

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"strconv"
@@ -53,10 +54,30 @@ func (a Admin) SaveArticle(w http.ResponseWriter, r *http.Request) {
 	content := r.FormValue("content")
 	// tagIds := r.FormValue("tagIds")
 	articleModel := model.NewArticleModel()
-	articleModel.AddArticle(title, content, 0, articleModel.StatusUnpublished)
-	w.Write([]byte(`{"code":"200"}`))
+	_, err := articleModel.AddArticle(title, content, 0, articleModel.StatusUnpublished)
+	if err != nil {
+		resp, _ := json.Marshal(service.Response{Code: service.HTTP_SERVER_ERROR, Msg: err.Error(), Data: nil})
+		w.Write(resp)
+		return
+	}
+
+	resp, _ := json.Marshal(service.Response{Code: service.HTTP_OK, Msg: "success", Data: nil})
+	w.Write(resp)
 }
 
 func (a Admin) PublishArticle(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	title := r.FormValue("title")
+	content := r.FormValue("content")
+	// tagIds := r.FormValue("tagIds")
+	articleModel := model.NewArticleModel()
+	_, err := articleModel.AddArticle(title, content, 0, articleModel.StatusPublished)
+	if err != nil {
+		resp, _ := json.Marshal(service.Response{Code: service.HTTP_SERVER_ERROR, Msg: err.Error(), Data: nil})
+		w.Write(resp)
+		return
+	}
 
+	resp, _ := json.Marshal(service.Response{Code: service.HTTP_OK, Msg: "success", Data: nil})
+	w.Write(resp)
 }

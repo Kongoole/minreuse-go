@@ -1,3 +1,4 @@
 package controller
 
-type Controller struct{}
+type Controller struct {
+}
