@@ -58,7 +58,7 @@ select {
         for (let i = 0; i < tags.length; i++) {
             auto[tags[i].textContent] = null
         }
-        M.Chips.init(elems, {
+        var instance = M.Chips.init(elems, {
             placeholder: '输入标签',
             autocompleteOptions: {
                 data: auto,
@@ -87,15 +87,10 @@ select {
 
         function persist(url) {
             var tagIds = []
-            $('.chip').each(function(){
-                var tagName = $(this)
-                .clone()    //clone the element
-                .children() //select all the children
-                .remove()   //remove all the children
-                .end()  //again go back to selected element
-                .text();
-                tagIds.push($('input[class="'+tagName+'"]').val())
-            })
+            var chips = instance[0].chipsData;
+            for (let i = 0; i < chips.length; i++) {
+                tagIds.push($('input[class="'+chips[i]["tag"]+'"]').val())
+            }
             var title = $('input[name="title"]').val();
             var content = mdEditor.getMarkdown();
             $.ajax({
