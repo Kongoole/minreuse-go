@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -29,7 +30,7 @@ func (a Admin) ArticleList(w http.ResponseWriter, r *http.Request) {
 			log.Println("fail to get off")
 		}
 	}
-	articleModel := model.NewArticleModel()
+	articleModel := model.ArticleModelInstance()
 	articles := articleModel.FetchWithPagination(offset, articleModel.StatusPublished, articleModel.StatusUnpublished)
 	total := articleModel.FetchArticleAmount()
 	pagination := service.NewPagination().HTML(total, offset, "/admin/article/list")
@@ -49,12 +50,20 @@ func (a Admin) ArticleCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a Admin) SaveArticle(w http.ResponseWriter, r *http.Request) {
+	addArticle(w, r, model.ArticleModelInstance().StatusUnpublished)
+}
+
+func (a Admin) PublishArticle(w http.ResponseWriter, r *http.Request) {
+	addArticle(w, r, model.ArticleModelInstance().StatusPublished)
+}
+
+func addArticle(w http.ResponseWriter, r *http.Request, status int) {
 	r.ParseForm()
 	title := r.FormValue("title")
 	content := r.FormValue("content")
 	// tagIds := r.FormValue("tagIds")
-	articleModel := model.NewArticleModel()
-	_, err := articleModel.AddArticle(title, content, 0, articleModel.StatusUnpublished)
+	articleModel := model.ArticleModelInstance()
+	_, err := articleModel.AddArticle(title, content, 0, status)
 	if err != nil {
 		resp, _ := json.Marshal(service.Response{Code: service.HTTP_SERVER_ERROR, Msg: err.Error(), Data: nil})
 		w.Write(resp)
@@ -65,19 +74,13 @@ func (a Admin) SaveArticle(w http.ResponseWriter, r *http.Request) {
 	w.Write(resp)
 }
 
-func (a Admin) PublishArticle(w http.ResponseWriter, r *http.Request) {
+func (a Admin) EditArticle(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func (a Admin) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	title := r.FormValue("title")
 	content := r.FormValue("content")
-	// tagIds := r.FormValue("tagIds")
-	articleModel := model.NewArticleModel()
-	_, err := articleModel.AddArticle(title, content, 0, articleModel.StatusPublished)
-	if err != nil {
-		resp, _ := json.Marshal(service.Response{Code: service.HTTP_SERVER_ERROR, Msg: err.Error(), Data: nil})
-		w.Write(resp)
-		return
-	}
-
-	resp, _ := json.Marshal(service.Response{Code: service.HTTP_OK, Msg: "success", Data: nil})
-	w.Write(resp)
+	fmt.Println(title, content)
 }

@@ -9,7 +9,7 @@ type Searcher interface {
 }
 
 type ArticleSearcher struct {
-	ArticleModel model.ArticleModel
+	ArticleModel *model.ArticleModel
 }
 
 // DOSearch() does search action
@@ -18,7 +18,7 @@ func DoSearch(s Searcher, keywords string) interface{} {
 }
 
 func NewArticleSearcher() ArticleSearcher {
-	return ArticleSearcher{ArticleModel: model.NewArticleModel()}
+	return ArticleSearcher{ArticleModel: model.ArticleModelInstance()}
 }
 
 func (as ArticleSearcher) Search(keywords string) interface{} {

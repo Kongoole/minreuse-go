@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"strconv"
+	"sync"
 )
 
 const PAGE_SIZE = 7
@@ -25,14 +26,20 @@ type Article struct {
 	UpdateAt  string
 }
 
-// NewArticleModel creates an ArticleModel instance
-func NewArticleModel() ArticleModel {
-	return ArticleModel{StatusPublished: published, StatusUnpublished: unpublished}
+var once sync.Once
+var articleModel *ArticleModel
+
+// ArticleModelInstance creates an ArticleModel instance
+func ArticleModelInstance() *ArticleModel {
+	once.Do(func() {
+		articleModel = &ArticleModel{StatusPublished: published, StatusUnpublished: unpublished}
+	})
+	return articleModel
 }
 
 // FetchAll fetches all articles
-func (a ArticleModel) FetchAll() []Article {
-	(&a).InitSlave()
+func (a *ArticleModel) FetchAll() []Article {
+	a.InitSlave()
 	stmt, err := a.Slave.Prepare("SELECT article_id, title, create_at, update_at FROM article ORDER BY update_at DESC")
 	if err != nil {
 		log.Fatal(err)
@@ -56,8 +63,8 @@ func (a ArticleModel) FetchAll() []Article {
 }
 
 // FetchAllPublished fetches all published articles
-func (a ArticleModel) FetchAllPublished() []Article {
-	(&a).InitSlave()
+func (a *ArticleModel) FetchAllPublished() []Article {
+	a.InitSlave()
 	stmt, err := a.Slave.Prepare("SELECT article_id, title, create_at, update_at FROM article WHERE status=" +
 		strconv.Itoa(a.StatusPublished) + " ORDER BY update_at DESC")
 	if err != nil {
@@ -81,8 +88,8 @@ func (a ArticleModel) FetchAllPublished() []Article {
 	return articles
 }
 
-func (a ArticleModel) FetchWithPagination(offset int, statuses ...int) []Article {
-	(&a).InitSlave()
+func (a *ArticleModel) FetchWithPagination(offset int, statuses ...int) []Article {
+	a.InitSlave()
 	sql := "SELECT article_id, title FROM article"
 	if len(statuses) > 0 {
 		statusStr := "("
@@ -117,8 +124,8 @@ func (a ArticleModel) FetchWithPagination(offset int, statuses ...int) []Article
 }
 
 // FetchArticleAmount fetch all article amount
-func (a ArticleModel) FetchArticleAmount(statuses ...int) int {
-	(&a).InitSlave()
+func (a *ArticleModel) FetchArticleAmount(statuses ...int) int {
+	a.InitSlave()
 	sql := "SELECT COUNT(article_id) FROM article"
 	if len(statuses) > 0 {
 		statusStr := "("
@@ -147,8 +154,8 @@ func (a ArticleModel) FetchArticleAmount(statuses ...int) int {
 	return total
 }
 
-func (a ArticleModel) FetchOneByArticleId(articleId int) Article {
-	(&a).InitSlave()
+func (a *ArticleModel) FetchOneByArticleId(articleId int) Article {
+	a.InitSlave()
 
 	stmt, err := a.Slave.Prepare("SELECT article_id, title, content FROM article WHERE article_id=?")
 	if err != nil {
@@ -171,8 +178,8 @@ func (a ArticleModel) FetchOneByArticleId(articleId int) Article {
 	return article
 }
 
-func (a ArticleModel) FetchTagArticlesByTagId(tagId int) []Article {
-	(&a).InitSlave()
+func (a *ArticleModel) FetchTagArticlesByTagId(tagId int) []Article {
+	a.InitSlave()
 	stmt, err := a.Slave.Prepare("SELECT a.article_id, a.title FROM article AS a INNER JOIN article_tag AS at" +
 		" ON a.article_id=at.article_id WHERE at.tag_id=? AND a.status=" + strconv.Itoa(a.StatusPublished))
 	if err != nil {
@@ -192,8 +199,8 @@ func (a ArticleModel) FetchTagArticlesByTagId(tagId int) []Article {
 	return articles
 }
 
-func (a ArticleModel) FetchArticlesByKeyWords(keywords string) []Article {
-	(&a).InitSlave()
+func (a *ArticleModel) FetchArticlesByKeyWords(keywords string) []Article {
+	a.InitSlave()
 	stmt, err := a.Slave.Prepare("SELECT article_id, title, content FROM article WHERE title LIKE concat('%', ?, '%')")
 	if err != nil {
 		log.Fatal("failed to search article, err: " + err.Error())
@@ -214,7 +221,7 @@ func (a ArticleModel) FetchArticlesByKeyWords(keywords string) []Article {
 	return articles
 }
 
-func (a ArticleModel) AddArticle(title, content string, author_id, status int) (int, error) {
+func (a *ArticleModel) AddArticle(title, content string, author_id, status int) (int, error) {
 	if title == "" {
 		return 0, errors.New("title cannot be empty")
 	}
