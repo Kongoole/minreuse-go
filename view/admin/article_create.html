@@ -96,16 +96,17 @@ select {
             $.ajax({
                 url: url,
                 type: "post",
-                data: {
+                data: JSON.stringify({
                     title: title,
                     content: content,
-                    tagIds: JSON.stringify(tagIds)
-                },
+                    tagIds: tagIds
+                }),
+                contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    console.log(data.code);
                     if (data.code === 200) {
                         alert("保存成功");
+                        //window.location.href = "/admin/article/list";
                     } else {
                         alert("保存失败：" + data.msg);
                     }

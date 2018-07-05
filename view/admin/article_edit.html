@@ -17,7 +17,7 @@ select {
     <div class="col l12">
         <div class="row">
             <div class="input-field col s12">
-                <input name="title" id="title" type="text" class="validate">
+                <input name="title" id="title" type="text" class="validate" value="{{.Article.Title}}">
                 <label for="title">标题</label>
             </div>
         </div>
@@ -27,7 +27,7 @@ select {
             </div>
         </div>
         <div class="row">
-            {{range .Tags}}
+            {{range .AllTags}}
             <span class="new badge tag" data-badge-caption="">{{.Name}}</span>
             <input type="hidden" class="{{.Name}}" value="{{.Id}}">
             {{end}}
@@ -48,13 +48,13 @@ select {
 <script src="/public/plugin/editor-md/editormd.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-        let elems = document.querySelectorAll('.chips')
+        let elem = document.querySelectorAll('.chips')
         let tags = document.getElementsByClassName("tag")
         let auto = {}
         for (let i = 0; i < tags.length; i++) {
             auto[tags[i].textContent] = null
         }
-        M.Chips.init(elems, {
+        var instance = M.Chips.init(elem, {
             placeholder: '输入标签',
             autocompleteOptions: {
                 data: auto,
@@ -62,6 +62,9 @@ select {
                 minLength: 1
             }
         });
+        instance.
+        
+        console.log(instance)
         // markdown instance
         var mdEditor;
         $(function() {

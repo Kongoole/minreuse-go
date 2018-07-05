@@ -58,12 +58,16 @@ func (a Admin) PublishArticle(w http.ResponseWriter, r *http.Request) {
 }
 
 func addArticle(w http.ResponseWriter, r *http.Request, status int) {
-	r.ParseForm()
-	title := r.FormValue("title")
-	content := r.FormValue("content")
-	// tagIds := r.FormValue("tagIds")
+	// r.ParseForm()
+	// title := r.FormValue("title")
+	// content := r.FormValue("content")
+	//tagIds := r.FormValue("tagIds")
+	var data map[string]interface{}
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&data)
 	articleModel := model.ArticleModelInstance()
-	_, err := articleModel.AddArticle(title, content, 0, status)
+	_, err := articleModel.AddArticle(data["title"].(string), data["content"].(string), 0, status)
+	fmt.Println(data["tagIds"])
 	if err != nil {
 		resp, _ := json.Marshal(service.Response{Code: service.HTTP_SERVER_ERROR, Msg: err.Error(), Data: nil})
 		w.Write(resp)
@@ -74,8 +78,18 @@ func addArticle(w http.ResponseWriter, r *http.Request, status int) {
 	w.Write(resp)
 }
 
+// EditArticle shows article edit page
 func (a Admin) EditArticle(w http.ResponseWriter, r *http.Request) {
-
+	articleId, _ := strconv.Atoi(r.URL.Query().Get("article_id"))
+	article := model.ArticleModelInstance().FetchOneByArticleId(articleId)
+	tags := model.NewTagModel().FetchTagsByArticleId(articleId)
+	allTags := model.NewTagModel().FetchAll()
+	data := struct {
+		Article model.Article
+		Tags    []model.Tag
+		AllTags []model.Tag
+	}{article, tags, allTags}
+	render.NewAdminRender().SetTemplates("admin/article_edit.html").Render(w, data)
 }
 
 func (a Admin) UpdateArticle(w http.ResponseWriter, r *http.Request) {
