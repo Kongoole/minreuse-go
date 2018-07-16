@@ -14,6 +14,8 @@ func Register() {
 	http.HandleFunc("/blog/search", controller.Blog{}.Search)
 	http.HandleFunc("/about", controller.About{}.Index)
 
+	http.HandleFunc("/admin", controller.Admin{}.Login)
+	http.HandleFunc("/admin/login", controller.Admin{}.Login)
 	http.HandleFunc("/admin/index", controller.Admin{}.Index)
 	http.HandleFunc("/admin/article/create", controller.Admin{}.ArticleCreate)
 	http.HandleFunc("/admin/article/list", controller.Admin{}.ArticleList)

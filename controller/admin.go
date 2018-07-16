@@ -16,6 +16,10 @@ type Admin struct {
 	Controller
 }
 
+func (a Admin) Login(w http.ResponseWriter, r *http.Request) {
+	render.NewAdminRender().SetTemplates("admin/login.html").Render(w, nil)
+}
+
 func (a Admin) Index(w http.ResponseWriter, r *http.Request) {
 	render.NewAdminRender().SetTemplates("admin/index.html").Render(w, nil)
 }
