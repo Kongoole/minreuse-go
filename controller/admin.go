@@ -17,7 +17,13 @@ type Admin struct {
 }
 
 func (a Admin) Login(w http.ResponseWriter, r *http.Request) {
-	render.NewAdminRender().SetTemplates("admin/login.html").Render(w, nil)
+	if r.Method == "POST" {
+		var data map[string]interface{}
+		json.NewDecoder(r.Body).Decode(&data)
+
+	} else {
+		render.NewAdminRender().SetTemplates("admin/login.html").Render(w, nil)
+	}
 }
 
 func (a Admin) Index(w http.ResponseWriter, r *http.Request) {
