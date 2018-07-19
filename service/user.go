@@ -1,14 +1,18 @@
 package service
 
 import (
-	"golang.org/x/crypto/bcrypt"
 	"log"
+
+	"github.com/gorilla/sessions"
 	"github.com/kongoole/minreuse-go/model"
+	"golang.org/x/crypto/bcrypt"
 )
 
-type Login struct {}
+type Login struct{}
 
-type Pwd struct {}
+type Pwd struct{}
+
+var store = sessions.NewCookieStore([]byte("hello"))
 
 func (p Pwd) Encode(raw string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(raw), bcrypt.DefaultCost)
@@ -17,15 +21,16 @@ func (p Pwd) Encode(raw string) ([]byte, error) {
 // CheckLogin checks account and password
 // if passed, session will be set
 func (l Login) CheckLogin(account string, pwd string) bool {
-	// check account & pwd
-	hashedPwd, err := Pwd{}.Encode(pwd)
-	if err != nil {
-		log.Fatal("fail to hash pwd: " + err.Error())
-	}
+	// a, _ := bcrypt.GenerateFromPassword([]byte(pwd), bcrypt.DefaultCost)
+	// fmt.Println(string(a))
 	// get pwd by account
 	userModel := model.UserModelInstance()
-	if string(hashedPwd) != userModel.GetPwd(account) {
+	hashedPwd := userModel.GetPwd(account)
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPwd), []byte(pwd))
+	if err != nil {
+		log.Println("fail to compare pwd: " + err.Error())
 		return false
 	}
+
 	return true
 }

@@ -16,8 +16,8 @@
         <form class="col s12">
             <div class="row">
                 <div class="input-field col s6 offset-s3">
-                    <input id="user" type="text" class="validate">
-                    <label for="user">用户名</label>
+                    <input id="account" type="text" class="validate">
+                    <label for="account">用户名</label>
                 </div>
             </div>
             <div class="row">
@@ -38,23 +38,22 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#login").click(function () {
-            let user = $("#user").val();
+            let account = $("#account").val();
             let pwd = $("#password").val();
             $.ajax({
                 url: "/admin/login",
                 type: "post",
                 data: JSON.stringify({
-                    user: user,
+                    account: account,
                     pwd: pwd
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
                     if (data.code === 200) {
-                        alert("保存成功");
-                        //window.location.href = "/admin/article/list";
+                        window.location.href = "/admin/index";
                     } else {
-                        alert("保存失败：" + data.msg);
+                        alert("登录失败");
                     }
                 },
                 error: function () {

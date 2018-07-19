@@ -20,7 +20,23 @@ func (a Admin) Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		var data map[string]interface{}
 		json.NewDecoder(r.Body).Decode(&data)
-
+		isPwdValid := service.Login{}.CheckLogin(data["account"].(string), data["pwd"].(string))
+		if isPwdValid {
+			// set session
+			s := service.NewSessionManager()
+			session, err := s.Store.Get(r, s.DefaultSessionName)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			session.Values["is_login"] = 1
+			session.Save(r, w)
+			resp := service.Response{Code: http.StatusOK, Msg: "success", Data: nil}
+			resp.JSONResponse(w)
+			return
+		}
+		resp := service.Response{Code: http.StatusBadRequest, Msg: "fail", Data: nil}
+		resp.JSONResponse(w)
 	} else {
 		render.NewAdminRender().SetTemplates("admin/login.html").Render(w, nil)
 	}
@@ -37,7 +53,7 @@ func (a Admin) ArticleList(w http.ResponseWriter, r *http.Request) {
 		var err error
 		offset, err = strconv.Atoi(page)
 		if err != nil {
-			log.Println("fail to get off")
+			log.Fatal("fail to get off")
 		}
 	}
 	articleModel := model.ArticleModelInstance()
