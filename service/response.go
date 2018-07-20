@@ -16,8 +16,8 @@ const (
 )
 
 // JSONResp sends json response to client
-func (r *Response) JSONResp(w http.ResponseWriter) {
-	resp, _ := json.Marshal(&r)
-	w.Header().Set("Content-type", "application/json; charset=utf-8")
+func (r Response) JSONResponse(w http.ResponseWriter) {
+	resp, _ := json.Marshal(r)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Write(resp)
 }

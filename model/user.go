@@ -23,13 +23,13 @@ func (u *UserModel) GetPwd(account string) string {
 	u.InitSlave()
 	stmt, err := u.Slave.Prepare("SELECT password FROM user WHERE email=? OR name=?")
 	if err != nil {
-		log.Fatal("fail to fetch password: " + err.Error())
+		log.Fatal("fail to get user pwd: " + err.Error())
 	}
 	defer stmt.Close()
 
 	rows, err := stmt.Query(account, account)
 	if err != nil {
-		log.Fatal("fail to fetch password: " + err.Error())
+		log.Fatal("fail to get user pwd: " + err.Error())
 	}
 	defer rows.Close()
 
@@ -40,6 +40,6 @@ func (u *UserModel) GetPwd(account string) string {
 			break
 		}
 	}
-	rows.Close()
+
 	return pwd
 }

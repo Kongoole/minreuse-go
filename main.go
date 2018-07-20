@@ -1,9 +1,10 @@
 package main
 
 import (
-	_ "github.com/kongoole/minreuse-go/bootstrap"
 	"log"
 	"net/http"
+
+	_ "github.com/kongoole/minreuse-go/bootstrap"
 )
 
 func main() {
