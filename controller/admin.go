@@ -20,7 +20,17 @@ func (a Admin) Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		var data map[string]interface{}
 		json.NewDecoder(r.Body).Decode(&data)
-
+		loginService := service.LoginService()
+		result := loginService.CheckLogin(data["account"].(string), data["pwd"].(string))
+		if result {
+			// login success
+			resp := service.Response{Code: http.StatusOK, Msg: "success", Data: nil}
+			resp.JSONResp(w)
+			return
+		}
+		// login fail
+		resp := service.Response{Code: service.HTTP_BADPARAMS, Msg: "账号密码不匹配", Data: nil}
+		resp.JSONResp(w)
 	} else {
 		render.NewAdminRender().SetTemplates("admin/login.html").Render(w, nil)
 	}
@@ -79,12 +89,12 @@ func addArticle(w http.ResponseWriter, r *http.Request, status int) {
 	_, err := articleModel.AddArticle(data["title"].(string), data["content"].(string), 0, status)
 	fmt.Println(data["tagIds"])
 	if err != nil {
-		resp, _ := json.Marshal(service.Response{Code: service.HTTP_SERVER_ERROR, Msg: err.Error(), Data: nil})
+		resp, _ := json.Marshal(service.Response{Code: service.HTTP_BADPARAMS, Msg: err.Error(), Data: nil})
 		w.Write(resp)
 		return
 	}
 
-	resp, _ := json.Marshal(service.Response{Code: service.HTTP_OK, Msg: "success", Data: nil})
+	resp, _ := json.Marshal(service.Response{Code: http.StatusOK, Msg: "success", Data: nil})
 	w.Write(resp)
 }
 

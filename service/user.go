@@ -1,30 +1,34 @@
 package service
 
 import (
-	"golang.org/x/crypto/bcrypt"
-	"log"
+	"fmt"
+
 	"github.com/kongoole/minreuse-go/model"
+	"golang.org/x/crypto/bcrypt"
 )
 
-type Login struct {}
+type Login struct{}
 
-type Pwd struct {}
+var loginService *Login
 
-func (p Pwd) Encode(raw string) ([]byte, error) {
-	return bcrypt.GenerateFromPassword([]byte(raw), bcrypt.DefaultCost)
+// LoginService generates a singleton login service
+func LoginService() *Login {
+	once.Do(func() {
+		loginService = &Login{}
+	})
+	return loginService
 }
 
 // CheckLogin checks account and password
 // if passed, session will be set
 func (l Login) CheckLogin(account string, pwd string) bool {
-	// check account & pwd
-	hashedPwd, err := Pwd{}.Encode(pwd)
-	if err != nil {
-		log.Fatal("fail to hash pwd: " + err.Error())
-	}
 	// get pwd by account
 	userModel := model.UserModelInstance()
-	if string(hashedPwd) != userModel.GetPwd(account) {
+	accountPwd := userModel.GetPwd(account)
+	a, _ := bcrypt.GenerateFromPassword([]byte(pwd), bcrypt.DefaultCost)
+	fmt.Println(string(a), accountPwd)
+	err := bcrypt.CompareHashAndPassword([]byte(accountPwd), []byte(pwd))
+	if err != nil {
 		return false
 	}
 	return true

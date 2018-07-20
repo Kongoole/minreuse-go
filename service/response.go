@@ -1,5 +1,10 @@
 package service
 
+import (
+	"encoding/json"
+	"net/http"
+)
+
 type Response struct {
 	Code int                    `json:"code"`
 	Msg  string                 `json:"msg"`
@@ -7,6 +12,12 @@ type Response struct {
 }
 
 const (
-	HTTP_OK           = 200
-	HTTP_SERVER_ERROR = 500
+	HTTP_BADPARAMS = 100001
 )
+
+// JSONResp sends json response to client
+func (r *Response) JSONResp(w http.ResponseWriter) {
+	resp, _ := json.Marshal(&r)
+	w.Header().Set("Content-type", "application/json; charset=utf-8")
+	w.Write(resp)
+}
