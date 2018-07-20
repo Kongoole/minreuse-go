@@ -8,14 +8,9 @@ type UserModel struct {
 	Model
 }
 
-var userModel *UserModel
-
 // ArticleModelInstance creates an ArticleModel instance
 func UserModelInstance() *UserModel {
-	once.Do(func() {
-		userModel = &UserModel{}
-	})
-	return userModel
+	return &UserModel{}
 }
 
 // GetPwd gets password by account

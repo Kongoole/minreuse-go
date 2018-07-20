@@ -10,16 +10,11 @@ import (
 
 type Login struct{}
 
-var loginService *Login
-
 var store = sessions.NewCookieStore([]byte("hello"))
 
 // LoginService generates a singleton login service
 func LoginService() *Login {
-	once.Do(func() {
-		loginService = &Login{}
-	})
-	return loginService
+	return &Login{}
 }
 
 // CheckLogin checks account and password

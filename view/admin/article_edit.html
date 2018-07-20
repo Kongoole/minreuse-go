@@ -1,17 +1,19 @@
 {{template "header"}}
 <link rel="stylesheet" href="/public/plugin/editor-md/css/editormd.css" />
 <style>
-ul>li {
-    list-style-type:disc!important;
-}
-.divider {
-    overflow: inherit;
-    background-color: inherit;
-}
-select {
-    display: inline-block;
-    width: auto;
-}
+    ul>li {
+        list-style-type: disc !important;
+    }
+
+    .divider {
+        overflow: inherit;
+        background-color: inherit;
+    }
+
+    select {
+        display: inline-block;
+        width: auto;
+    }
 </style>
 <div class="row">
     <div class="col l12">
@@ -29,8 +31,7 @@ select {
         <div class="row">
             {{range .AllTags}}
             <span class="new badge tag" data-badge-caption="">{{.Name}}</span>
-            <input type="hidden" class="{{.Name}}" value="{{.Id}}">
-            {{end}}
+            <input type="hidden" class="{{.Name}}" value="{{.Id}}"> {{end}}
         </div>
         <!--editor-->
         <div class="row">
@@ -47,7 +48,7 @@ select {
 </div>
 <script src="/public/plugin/editor-md/editormd.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function () {
         let elem = document.querySelectorAll('.chips')
         let tags = document.getElementsByClassName("tag")
         let auto = {}
@@ -62,34 +63,32 @@ select {
                 minLength: 1
             }
         });
-        instance.
-        
-        console.log(instance)
+
         // markdown instance
         var mdEditor;
-        $(function() {
+        $(function () {
             mdEditor = editormd("test-editormd", {
-                width   : "99%",
-                height  : 640,
-                syncScrolling : "single",
-                path    : "/public/plugin/editor-md/lib/"
+                width: "99%",
+                height: 640,
+                syncScrolling: "single",
+                path: "/public/plugin/editor-md/lib/"
             });
         });
 
-        $(".update-article").click(function(){
+        $(".update-article").click(function () {
             persist("/admin/article/update");
         });
 
         function persist(url) {
             var tagIds = []
-            $('.chip').each(function(){
+            $('.chip').each(function () {
                 var tagName = $(this)
-                .clone()    //clone the element
-                .children() //select all the children
-                .remove()   //remove all the children
-                .end()  //again go back to selected element
-                .text();
-                tagIds.push($('input[class="'+tagName+'"]').val())
+                    .clone() //clone the element
+                    .children() //select all the children
+                    .remove() //remove all the children
+                    .end() //again go back to selected element
+                    .text();
+                tagIds.push($('input[class="' + tagName + '"]').val())
             })
             var title = $('input[name="title"]').val();
             var content = mdEditor.getMarkdown();

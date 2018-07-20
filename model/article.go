@@ -4,7 +4,6 @@ import (
 	"errors"
 	"log"
 	"strconv"
-	"sync"
 )
 
 const PAGE_SIZE = 7
@@ -26,15 +25,11 @@ type Article struct {
 	UpdateAt  string
 }
 
-var once sync.Once
 var articleModel *ArticleModel
 
 // ArticleModelInstance creates an ArticleModel instance
 func ArticleModelInstance() *ArticleModel {
-	once.Do(func() {
-		articleModel = &ArticleModel{StatusPublished: published, StatusUnpublished: unpublished}
-	})
-	return articleModel
+	return &ArticleModel{StatusPublished: published, StatusUnpublished: unpublished}
 }
 
 // FetchAll fetches all articles
