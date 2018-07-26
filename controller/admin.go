@@ -120,8 +120,11 @@ func (a Admin) EditArticle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a Admin) UpdateArticle(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	title := r.FormValue("title")
-	content := r.FormValue("content")
-	fmt.Println(title, content)
+	var data map[string]interface{}
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&data)
+	articleID, _ := strconv.Atoi(data["article_id"].(string))
+	delete(data, "article_id")
+	delete(data, "tagIds")
+	service.ArticleServiceInstance().UpdateArticle(articleID, data)
 }

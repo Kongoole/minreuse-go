@@ -46,6 +46,7 @@
         </div>
     </div>
 </div>
+<input name="article_id" type="hidden" value="{{.Article.ArticleId}}" />
 <script src="/public/plugin/editor-md/editormd.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -71,35 +72,36 @@
                 width: "99%",
                 height: 640,
                 syncScrolling: "single",
-                path: "/public/plugin/editor-md/lib/"
+                path: "/public/plugin/editor-md/lib/",
+                onload: function () {
+                    this.setMarkdown("{{.Article.Content}}");
+                }
             });
         });
-
+        
         $(".update-article").click(function () {
             persist("/admin/article/update");
         });
 
         function persist(url) {
             var tagIds = []
-            $('.chip').each(function () {
-                var tagName = $(this)
-                    .clone() //clone the element
-                    .children() //select all the children
-                    .remove() //remove all the children
-                    .end() //again go back to selected element
-                    .text();
-                tagIds.push($('input[class="' + tagName + '"]').val())
-            })
+            var chips = instance[0].chipsData;
+            for (let i = 0; i < chips.length; i++) {
+                tagIds.push($('input[class="'+chips[i]["tag"]+'"]').val())
+            }
+            var articleId = $('input[name="article_id"]').val();
             var title = $('input[name="title"]').val();
             var content = mdEditor.getMarkdown();
             $.ajax({
                 url: url,
                 type: "post",
-                data: {
+                data: JSON.stringify({
+                    article_id: articleId,
                     title: title,
                     content: content,
-                    tagIds: JSON.stringify(tagIds)
-                },
+                    tagIds: tagIds
+                }),
+                contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
                     console.log(data.code);

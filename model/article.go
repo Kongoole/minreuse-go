@@ -241,3 +241,28 @@ func (a *ArticleModel) AddArticle(title, content string, author_id, status int) 
 	}
 	return int(lastId), nil
 }
+
+func (a *ArticleModel) UpdateArticle(id int, data map[string]interface{}) {
+	a.InitMaster()
+	sql := "UPDATE article SET "
+	var vals []interface{}
+	for key, val := range data {
+		sql += key + "=?,"
+		vals = append(vals, val)
+	}
+	// remove last ,
+	sql = sql[:len(sql)-1]
+	sql += " WHERE article_id=?"
+	vals = append(vals, id)
+
+	stmt, err := a.Master.Prepare(sql)
+	if err != nil {
+		log.Fatal("update article: failed to prepare" + err.Error())
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(vals...)
+	if err != nil {
+		log.Fatal("update article: failed to exec " + err.Error())
+	}
+}
