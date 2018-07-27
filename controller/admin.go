@@ -126,5 +126,10 @@ func (a Admin) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	articleID, _ := strconv.Atoi(data["article_id"].(string))
 	delete(data, "article_id")
 	delete(data, "tagIds")
-	service.ArticleServiceInstance().UpdateArticle(articleID, data)
+	updated := service.ArticleServiceInstance().UpdateArticle(articleID, data)
+	if !updated {
+		service.Response{http.StatusBadGateway, "fail to update", nil}.JSONResponse(w)
+	} else {
+		service.Response{http.StatusOK, "success", nil}.JSONResponse(w)
+	}
 }

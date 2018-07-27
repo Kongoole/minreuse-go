@@ -84,7 +84,7 @@
         });
 
         function persist(url) {
-            var tagIds = []
+            var tagIds = [];
             var chips = instance[0].chipsData;
             for (let i = 0; i < chips.length; i++) {
                 tagIds.push($('input[class="'+chips[i]["tag"]+'"]').val())
@@ -107,6 +107,7 @@
                     console.log(data.code);
                     if (data.code === 200) {
                         alert("保存成功");
+                        window.location.href="/admin/article/list";
                     } else {
                         alert("保存失败：" + data.msg);
                     }

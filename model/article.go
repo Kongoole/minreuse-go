@@ -242,7 +242,7 @@ func (a *ArticleModel) AddArticle(title, content string, author_id, status int) 
 	return int(lastId), nil
 }
 
-func (a *ArticleModel) UpdateArticle(id int, data map[string]interface{}) {
+func (a *ArticleModel) UpdateArticle(id int, data map[string]interface{}) bool {
 	a.InitMaster()
 	sql := "UPDATE article SET "
 	var vals []interface{}
@@ -257,12 +257,16 @@ func (a *ArticleModel) UpdateArticle(id int, data map[string]interface{}) {
 
 	stmt, err := a.Master.Prepare(sql)
 	if err != nil {
-		log.Fatal("update article: failed to prepare" + err.Error())
+		log.Println("update article: failed to prepare" + err.Error())
+		return false
 	}
 	defer stmt.Close()
 
 	_, err = stmt.Exec(vals...)
 	if err != nil {
-		log.Fatal("update article: failed to exec " + err.Error())
+		log.Println("update article: failed to exec " + err.Error())
+		return false
 	}
+
+	return true
 }

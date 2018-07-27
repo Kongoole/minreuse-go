@@ -10,6 +10,6 @@ func ArticleServiceInstance() *ArticleService {
 	return new(ArticleService)
 }
 
-func (as *ArticleService) UpdateArticle(articleId int, data map[string]interface{}) {
-	model.ArticleModelInstance().UpdateArticle(articleId, data)
+func (as *ArticleService) UpdateArticle(articleId int, data map[string]interface{}) bool {
+	return model.ArticleModelInstance().UpdateArticle(articleId, data)
 }
