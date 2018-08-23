@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"log"
 	"strconv"
 )
@@ -93,4 +94,25 @@ func (t TagModel) FetchTagsWithArticlesNum(status int) []Tag {
 	}
 
 	return tags
+}
+
+func (t TagModel) AddArticleTags(articleId int, tagIds []int) error {
+	if len(tagIds) == 0 {
+		return errors.New("Invalid tag ids")
+	}
+	t.InitMaster()
+	var vals []int
+	sql := "INSERT INTO article_tag(`article_id`, `tag_id`) VALUES "
+	for _, tagId := range tagIds {
+		sql += "(?,?),"
+		vals = append(vals, tagId)
+	}
+	stmt, err := t.Master.Prepare()
+	if err != nil {
+		log.Println("fail to insert into article_tag")
+		return err
+	}
+	defer stmt.Close()
+
+	stmt.Exec()
 }
