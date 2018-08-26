@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -77,32 +76,26 @@ func (a Admin) ArticleCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a Admin) SaveArticle(w http.ResponseWriter, r *http.Request) {
-	addArticle(w, r, model.ArticleModelInstance().StatusUnpublished)
+	params := service.AddArticleParams{}
+	json.NewDecoder(r.Body).Decode(&params)
+	articleService := service.NewArticleService()
+	articleService.AddArticle(params, model.ArticleModel{}.StatusUnpublished)
+
 }
 
 func (a Admin) PublishArticle(w http.ResponseWriter, r *http.Request) {
-	addArticle(w, r, model.ArticleModelInstance().StatusPublished)
-}
-
-func addArticle(w http.ResponseWriter, r *http.Request, status int) {
-	// r.ParseForm()
-	// title := r.FormValue("title")
-	// content := r.FormValue("content")
-	//tagIds := r.FormValue("tagIds")
-	var data map[string]interface{}
-	decoder := json.NewDecoder(r.Body)
-	decoder.Decode(&data)
-	articleModel := model.ArticleModelInstance()
-	_, err := articleModel.AddArticle(data["title"].(string), data["content"].(string), 0, status)
-	fmt.Println(data["tagIds"])
+	params := service.AddArticleParams{}
+	json.NewDecoder(r.Body).Decode(&params)
+	articleService := service.NewArticleService()
+	articleID, err := articleService.AddArticle(params, model.ArticleModel{}.StatusPublished)
 	if err != nil {
-		resp, _ := json.Marshal(service.Response{Code: service.HTTP_BADPARAMS, Msg: err.Error(), Data: nil})
-		w.Write(resp)
-		return
+		log.Fatal("fail to add article, error msg:" + err.Error())
 	}
-
-	resp, _ := json.Marshal(service.Response{Code: http.StatusOK, Msg: "success", Data: nil})
-	w.Write(resp)
+	articleTagService := service.NewArticleTagService(model.ArticleTagModel{})
+	_, err = articleTagService.AddArticleTags(articleID, params.TagIds)
+	if err != nil {
+		log.Fatal("fail to add article tags with error msg: " + err.Error())
+	}
 }
 
 // EditArticle shows article edit page
@@ -119,6 +112,7 @@ func (a Admin) EditArticle(w http.ResponseWriter, r *http.Request) {
 	render.NewAdminRender().SetTemplates("admin/article_edit.html").Render(w, data)
 }
 
+// UpdateArticle updates an article
 func (a Admin) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	var data map[string]interface{}
 	decoder := json.NewDecoder(r.Body)
@@ -126,7 +120,7 @@ func (a Admin) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	articleID, _ := strconv.Atoi(data["article_id"].(string))
 	delete(data, "article_id")
 	delete(data, "tagIds")
-	updated := service.ArticleServiceInstance().UpdateArticle(articleID, data)
+	updated := service.NewArticleService().UpdateArticle(articleID, data)
 	if !updated {
 		service.Response{http.StatusBadGateway, "fail to update", nil}.JSONResponse(w)
 	} else {

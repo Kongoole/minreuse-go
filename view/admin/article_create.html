@@ -24,9 +24,6 @@ select {
         <div class="row">
             <div class="col s12">
                 <div class="chips"></div>
-                <div class="chips chips-initial"></div>
-                <div class="chips chips-placeholder"></div>
-                <div class="chips chips-autocomplete"></div>
             </div>
         </div>
         <div class="row">
@@ -55,13 +52,13 @@ select {
 <script src="/public/plugin/editor-md/editormd.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-        let elems = document.querySelectorAll('.chips')
-        let tags = document.getElementsByClassName("tag")
-        let auto = {}
+        let elems = document.querySelectorAll('.chips');
+        let tags = document.getElementsByClassName("tag");
+        let auto = {};
         for (let i = 0; i < tags.length; i++) {
-            auto[tags[i].textContent] = null
+            auto[tags[i].textContent] = null;
         }
-        var instance = M.Chips.init(elems, {
+        let instance = M.Chips.init(elems, {
             placeholder: '输入标签',
             autocompleteOptions: {
                 data: auto,
@@ -70,7 +67,7 @@ select {
             }
         });
         // markdown instance
-        var mdEditor;
+        let mdEditor;
         $(function() {
             mdEditor = editormd("test-editormd", {
                 width   : "99%",
@@ -89,20 +86,28 @@ select {
         });
 
         function persist(url) {
-            var tagIds = []
-            var chips = instance[0].chipsData;
-            for (let i = 0; i < chips.length; i++) {
-                tagIds.push($('input[class="'+chips[i]["tag"]+'"]').val())
+            let title = $('input[name="title"]').val();
+            if (title === "") {
+                alert("未填写标题");
+                return false;
             }
-            var title = $('input[name="title"]').val();
-            var content = mdEditor.getMarkdown();
+            let tagIds = [];
+            let chips = instance[0].chipsData;
+            for (let i = 0; i < chips.length; i++) {
+                tagIds.push(parseInt($('input[class="'+chips[i]["tag"]+'"]').val()))
+            }
+            if (tagIds.length === 0) {
+                alert("未选择标签");
+                return false;
+            }
+            let content = mdEditor.getMarkdown();
             $.ajax({
                 url: url,
                 type: "post",
                 data: JSON.stringify({
                     title: title,
                     content: content,
-                    tagIds: tagIds
+                    tag_ids: tagIds
                 }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",

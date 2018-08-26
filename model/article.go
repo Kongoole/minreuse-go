@@ -25,8 +25,6 @@ type Article struct {
 	UpdateAt  string
 }
 
-var articleModel *ArticleModel
-
 // ArticleModelInstance creates an ArticleModel instance
 func ArticleModelInstance() *ArticleModel {
 	return &ArticleModel{StatusPublished: published, StatusUnpublished: unpublished}
@@ -250,7 +248,7 @@ func (a *ArticleModel) UpdateArticle(id int, data map[string]interface{}) bool {
 		sql += key + "=?,"
 		vals = append(vals, val)
 	}
-	// remove last ,
+	// remove last ","
 	sql = sql[:len(sql)-1]
 	sql += " WHERE article_id=?"
 	vals = append(vals, id)
