@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"log"
+	"github.com/kongoole/minreuse-go/utils/log"
 	"net/http"
 	"strconv"
 

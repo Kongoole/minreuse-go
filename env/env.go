@@ -2,7 +2,7 @@ package env
 
 import (
 	"bufio"
-	"log"
+	"github.com/kongoole/minreuse-go/utils/log"
 	"os"
 	"strings"
 )

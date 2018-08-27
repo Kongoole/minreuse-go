@@ -2,7 +2,7 @@ package model
 
 import (
 	"database/sql"
-	"log"
+	"github.com/kongoole/minreuse-go/utils/log"
 	"os"
 	"time"
 

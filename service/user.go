@@ -1,7 +1,7 @@
 package service
 
 import (
-	"log"
+	"github.com/kongoole/minreuse-go/utils/log"
 
 	"github.com/gorilla/sessions"
 	"github.com/kongoole/minreuse-go/model"

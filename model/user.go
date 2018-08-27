@@ -1,7 +1,7 @@
 package model
 
 import (
-	"log"
+	"github.com/kongoole/minreuse-go/utils/log"
 )
 
 type UserModel struct {

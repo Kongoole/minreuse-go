@@ -2,7 +2,7 @@ package model
 
 import (
 	"errors"
-	"log"
+	"github.com/kongoole/minreuse-go/utils/log"
 	"strconv"
 )
 
