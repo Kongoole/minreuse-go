@@ -30,7 +30,7 @@ func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 		var err error
 		offset, err = strconv.Atoi(page)
 		if err != nil {
-			log.Println("fail to get off")
+			log.Fatal("fail to get off")
 		}
 	}
 	articleModel := model.ArticleModelInstance()

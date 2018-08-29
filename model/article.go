@@ -255,14 +255,14 @@ func (a *ArticleModel) UpdateArticle(id int, data map[string]interface{}) bool {
 
 	stmt, err := a.Master.Prepare(sql)
 	if err != nil {
-		log.Println("update article: failed to prepare" + err.Error())
+		log.Fatal("update article: failed to prepare" + err.Error())
 		return false
 	}
 	defer stmt.Close()
 
 	_, err = stmt.Exec(vals...)
 	if err != nil {
-		log.Println("update article: failed to exec " + err.Error())
+		log.Fatal("update article: failed to exec " + err.Error())
 		return false
 	}
 

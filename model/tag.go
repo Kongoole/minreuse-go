@@ -108,7 +108,7 @@ func (t TagModel) AddArticleTags(articleId int, tagIds []int) error {
 	// }
 	// stmt, err := t.Master.Prepare()
 	// if err != nil {
-	// 	log.Println("fail to insert into article_tag")
+	// 	log.Fatal("fail to insert into article_tag")
 	// 	return err
 	// }
 	// defer stmt.Close()

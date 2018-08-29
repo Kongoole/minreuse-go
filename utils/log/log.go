@@ -2,13 +2,12 @@ package log
 
 import (
 	"os"
-	"github.com/kongoole/minreuse-go/utils/log"
+	"log"
 	"time"
 )
 
-const logPath = "/data/logs"
-
 func Fatal(v ...interface{}) error {
+	logPath := os.Getenv("LOG_PATH")
 	_, err := os.Stat(logPath)
 	if err != nil {
 		if os.IsNotExist(err) {
