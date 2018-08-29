@@ -4,7 +4,6 @@ import (
 	"github.com/kongoole/minreuse-go/utils/log"
 	"net/http"
 	"strconv"
-
 	"github.com/kongoole/minreuse-go/model"
 	"github.com/kongoole/minreuse-go/render"
 	"github.com/kongoole/minreuse-go/service"
@@ -30,7 +29,7 @@ func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 		var err error
 		offset, err = strconv.Atoi(page)
 		if err != nil {
-			log.Fatal("fail to get off")
+			log.Debug("fail to get page")
 		}
 	}
 	articleModel := model.ArticleModelInstance()
@@ -46,7 +45,7 @@ func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 func (b Blog) Article(w http.ResponseWriter, r *http.Request) {
 	articleID, err := strconv.Atoi(r.URL.Query().Get("article_id"))
 	if err != nil {
-		log.Fatal(err)
+		log.Debug(err)
 	}
 	article := model.ArticleModelInstance().FetchOneByArticleId(articleID)
 	tags := model.NewTagModel().FetchTagsByArticleId(articleID)
