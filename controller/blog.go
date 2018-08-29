@@ -60,7 +60,7 @@ func (b Blog) Article(w http.ResponseWriter, r *http.Request) {
 func (b Blog) TagArticles(w http.ResponseWriter, r *http.Request) {
 	tagID, err := strconv.Atoi(r.URL.Query().Get("tag_id"))
 	if err != nil {
-		log.Fatal(err)
+		log.Debug(err)
 	}
 	articleModel := model.ArticleModelInstance()
 	articles := articleModel.FetchTagArticlesByTagId(tagID)
