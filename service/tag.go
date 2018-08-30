@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/pkg/errors"
 	"github.com/kongoole/minreuse-go/model"
+	"errors"
 )
 
 type TagService struct {}

@@ -27,8 +27,8 @@ func (l Login) CheckLogin(account string, pwd string) bool {
 	hashedPwd := userModel.GetPwd(account)
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPwd), []byte(pwd))
 	if err != nil {
-		log.Fatal("fail to compare pwd: " + err.Error())
-
+		// TODO: check error type
+		log.Debug("fail to compare pwd: " + err.Error())
 		return false
 	}
 
