@@ -8,7 +8,7 @@ type UserModel struct {
 	Model
 }
 
-// ArticleModelInstance creates an ArticleModel instance
+// NewArticleModel creates an ArticleModel instance
 func UserModelInstance() *UserModel {
 	return &UserModel{}
 }

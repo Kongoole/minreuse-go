@@ -25,8 +25,8 @@ type Article struct {
 	UpdateAt  string
 }
 
-// ArticleModelInstance creates an ArticleModel instance
-func ArticleModelInstance() *ArticleModel {
+// NewArticleModel creates an ArticleModel instance
+func NewArticleModel() *ArticleModel {
 	return &ArticleModel{StatusPublished: published, StatusUnpublished: unpublished}
 }
 
@@ -214,7 +214,7 @@ func (a *ArticleModel) FetchArticlesByKeyWords(keywords string) []Article {
 	return articles
 }
 
-func (a *ArticleModel) AddArticle(title, content string, author_id, status int) (int, error) {
+func (a *ArticleModel) AddArticle(title, content string, authorID, status int) (int, error) {
 	if title == "" {
 		return 0, errors.New("title cannot be empty")
 	}
@@ -225,17 +225,17 @@ func (a *ArticleModel) AddArticle(title, content string, author_id, status int) 
 	a.InitMaster()
 	stmt, err := a.Master.Prepare("INSERT into article(`title`, `content`, `author_id`, `status`) VALUES (?, ?, ?, ?)")
 	if err != nil {
-		log.Fatal("add article: failed to prepare, " + err.Error())
+		log.Debug("add article: failed to prepare, " + err.Error())
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(title, content, author_id, status)
+	res, err := stmt.Exec(title, content, authorID, status)
 	if err != nil {
-		log.Fatal("add article: failed to exec " + err.Error())
+		log.Debug("add article: failed to exec " + err.Error())
 	}
 
 	lastId, err := res.LastInsertId()
 	if err != nil {
-		log.Fatal("add article: failed to get last insert id, " + err.Error())
+		log.Debug("add article: failed to get last insert id, " + err.Error())
 	}
 	return int(lastId), nil
 }

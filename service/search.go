@@ -18,7 +18,7 @@ func DoSearch(s Searcher, keywords string) interface{} {
 }
 
 func NewArticleSearcher() ArticleSearcher {
-	return ArticleSearcher{ArticleModel: model.ArticleModelInstance()}
+	return ArticleSearcher{ArticleModel: model.NewArticleModel()}
 }
 
 func (as ArticleSearcher) Search(keywords string) interface{} {

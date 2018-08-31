@@ -17,11 +17,11 @@ func NewArticleService() *articleService {
 }
 
 func (as *articleService) UpdateArticle(articleId int, data map[string]interface{}) bool {
-	return model.ArticleModelInstance().UpdateArticle(articleId, data)
+	return model.NewArticleModel().UpdateArticle(articleId, data)
 }
 
 func (as *articleService) AddArticle(params AddArticleParams, status int) (int, error) {
-	articleModel := model.ArticleModelInstance()
+	articleModel := model.NewArticleModel()
 	// fixme: author id needed
 	return articleModel.AddArticle(params.Title, params.Content, 0, status)
 }

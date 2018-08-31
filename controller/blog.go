@@ -32,7 +32,7 @@ func (b Blog) Index(w http.ResponseWriter, r *http.Request) {
 			log.Debug("fail to get page")
 		}
 	}
-	articleModel := model.ArticleModelInstance()
+	articleModel := model.NewArticleModel()
 	articles := articleModel.FetchWithPagination(offset, articleModel.StatusPublished)
 	total := articleModel.FetchArticleAmount(articleModel.StatusPublished)
 	pagination := service.NewPagination().HTML(total, offset, "/blog")
@@ -47,7 +47,7 @@ func (b Blog) Article(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Debug(err)
 	}
-	article := model.ArticleModelInstance().FetchOneByArticleId(articleID)
+	article := model.NewArticleModel().FetchOneByArticleId(articleID)
 	tags := model.NewTagModel().FetchTagsByArticleId(articleID)
 	data := struct {
 		Article model.Article
@@ -62,7 +62,7 @@ func (b Blog) TagArticles(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Debug(err)
 	}
-	articleModel := model.ArticleModelInstance()
+	articleModel := model.NewArticleModel()
 	articles := articleModel.FetchTagArticlesByTagId(tagID)
 	tags := model.NewTagModel().FetchTagsWithArticlesNum(articleModel.StatusPublished)
 	data := BlogData{Articles: articles, Tags: tags}

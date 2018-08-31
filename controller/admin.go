@@ -56,7 +56,7 @@ func (a Admin) ArticleList(w http.ResponseWriter, r *http.Request) {
 			log.Fatal("fail to get off")
 		}
 	}
-	articleModel := model.ArticleModelInstance()
+	articleModel := model.NewArticleModel()
 	articles := articleModel.FetchWithPagination(offset, articleModel.StatusPublished, articleModel.StatusUnpublished)
 	total := articleModel.FetchArticleAmount()
 	pagination := service.NewPagination().HTML(total, offset, "/admin/article/list")
@@ -80,28 +80,28 @@ func (a Admin) SaveArticle(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&params)
 	articleService := service.NewArticleService()
 	articleService.AddArticle(params, model.ArticleModel{}.StatusUnpublished)
-
 }
 
 func (a Admin) PublishArticle(w http.ResponseWriter, r *http.Request) {
 	params := service.AddArticleParams{}
 	json.NewDecoder(r.Body).Decode(&params)
 	articleService := service.NewArticleService()
-	articleID, err := articleService.AddArticle(params, model.ArticleModel{}.StatusPublished)
+	articleModel := model.NewArticleModel()
+	articleID, err := articleService.AddArticle(params, articleModel.StatusPublished)
 	if err != nil {
-		log.Fatal("fail to add article, error msg:" + err.Error())
+		log.Debug("fail to add article, error msg:" + err.Error())
 	}
 	articleTagService := service.NewArticleTagService(model.ArticleTagModel{})
 	_, err = articleTagService.AddArticleTags(articleID, params.TagIds)
 	if err != nil {
-		log.Fatal("fail to add article tags with error msg: " + err.Error())
+		log.Debug("fail to add article tags with error msg: " + err.Error())
 	}
 }
 
 // EditArticle shows article edit page
 func (a Admin) EditArticle(w http.ResponseWriter, r *http.Request) {
 	articleId, _ := strconv.Atoi(r.URL.Query().Get("article_id"))
-	article := model.ArticleModelInstance().FetchOneByArticleId(articleId)
+	article := model.NewArticleModel().FetchOneByArticleId(articleId)
 	tags := model.NewTagModel().FetchTagsByArticleId(articleId)
 	allTags := model.NewTagModel().FetchAll()
 	data := struct {
