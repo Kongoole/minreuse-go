@@ -1,11 +1,13 @@
 {{template "header"}}
 <style>
     .card-content > ul > li {
-        list-style-type:disc!important;
+        list-style-type: disc !important;
     }
+
     .card-content > ul {
         padding-left: inherit;
     }
+
     .card-content > ol {
         padding-left: inherit;
     }
@@ -17,16 +19,33 @@
                 <span class="card-title">{{.Article.Title}}</span>
                 <p>
                     <span>
-                        {{range .Tags}}
+                    {{range .Tags}}
                         <div class="chip">
                                 <a class="red-text text-lighten-2" href="/tag?tag_id={{.Id}}">{{.Name}}</a>
                         </div>
-                        {{end}}
+                    {{end}}
                     </span>
-                    {{.Article.Content|markDown}}
+                {{.Article.Content|markDown}}
                 </p>
             </div>
         </div>
     </div>
 </div>
 {{template "footer"}}
+<script type="text/javascript">
+    $(document).ready(function () {
+        // config language code css
+        $("code[class^='language']").each(function (i, el) {
+            $(this).parent().css('padding', '12px');
+            $(this).parent().css('border', 'solid 1px rgba(51,51,51,0.12)');
+            $(this).parent().css('background', 'rgba(246,246,246,0.2)');
+        });
+        $("code:not([class])").each(function (i, el) {
+            $(this).css({
+                "padding": ".1em .25em",
+                "border": "solid 1px rgba(51,51,51,0.12)",
+                "border-radius": ".3em"
+            });
+        });
+    });
+</script>
